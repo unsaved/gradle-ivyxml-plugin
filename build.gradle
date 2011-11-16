@@ -3,9 +3,10 @@ defaultTasks 'jar'
 apply plugin: 'groovy'
 
 buildscript {
-    repositories { maven { url 'file:/tmp/fakeMvn' } }
+    repositories { maven { url 'https://oss.sonatype.org/content/groups/staging' } }
+    //repositories { mavenCentral() }
     dependencies {
-        classpath group: 'com.admc', name: 'gradle-javaPropFile-plugin', version: '0.1-SNAPSHOT'
+        classpath 'com.admc:gradle-javaPropFile-plugin:latest.milestone'
     }
 }
 

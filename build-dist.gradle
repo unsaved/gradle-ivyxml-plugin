@@ -27,7 +27,7 @@ dependencies {
 // description attribute of project is always set, but may be null
 if (!project.hasProperty('description') ||
         project.property('description') == null)
-    project.description = '''Support Ivy-native dependency file, traditionally 'ivy.xml'.'''
+    project.description = '''Support Ivy-native dependency files, traditionally 'ivy.xml'.'''
 
 uploadArchives {
     /*
@@ -81,16 +81,14 @@ uploadArchives {
                 }
             }
             if (project.hasProperty('developer.name')
-                    || project.hasProperty('developer.email')) organization {
-                developers {
-                    developer {
-                        if (project.hasProperty('developer.id'))
-                            id project.property('developer.id')
-                        if (project.hasProperty('developer.name'))
-                            name project.property('developer.name')
-                        if (project.hasProperty('developer.email'))
-                            email project.property('developer.email')
-                    }
+                    || project.hasProperty('developer.email')) developers {
+                developer {
+                    if (project.hasProperty('developer.id'))
+                        id project.property('developer.id')
+                    if (project.hasProperty('developer.name'))
+                        name project.property('developer.name')
+                    if (project.hasProperty('developer.email'))
+                        email project.property('developer.email')
                 }
             }
         }
