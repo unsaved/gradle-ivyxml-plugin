@@ -1,0 +1,121 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+signing {
+    //sign configurations.archives
+}
+
+buildscript {
+    repositories { maven { url 'file:/tmp/fakeMvn' } }
+    dependencies {
+        classpath group: 'com.admc', name: 'gradle-javaPropFile-plugin', version: '0.1-SNAPSHOT'
+    }
+}
+
+apply from: 'build.gradle'
+defaultTasks 'uploadArchives'
+
+configurations { deployJars }
+
+dependencies {
+    if (project.hasProperty('mavenRepository.dest.url')
+            && project.property('mavenRepository.dest.url').
+            startsWith('scp://'))
+        deployJars 'org.apache.maven.wagon:wagon-ssh:2.0'
+}
+
+// description attribute of project is always set, but may be null
+if (!project.hasProperty('description') ||
+        project.property('description') == null)
+    project.description = '''Support Ivy-native dependency file, traditionally 'ivy.xml'.'''
+
+uploadArchives {
+    /*
+    if (!project.hasProperty('mavenRepository.dest.url'))
+        // This crap just to satisfy load-time requirement when the
+        // uploadArchives task won't even be used.
+        project.setProperty('mavenRepository.dest.url', '')
+    */
+    def authMap = [:]
+    if (project.hasProperty('mavenRepository.dest.username'))
+        authMap['userName'] = project.property('mavenRepository.dest.username')
+    if (project.hasProperty('mavenRepository.dest.password'))
+        authMap['password'] = project.property('mavenRepository.dest.password')
+    if (project.hasProperty('mavenRepository.dest.privateKey'))
+        authMap['privateKey'] =
+                project.property('mavenRepository.dest.privateKey')
+
+    repositories.mavenDeployer {
+        configuration = configurations.deployJars
+        //beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+        if (project.hasProperty('mavenRepository.dest.url'))
+            repository(url: project.property('mavenRepository.dest.url')) {
+                authentication(authMap)
+            }
+        pom.project {
+            name 'Ivyxml Gradle Plugin'
+            description project.description
+            if (project.hasProperty('url')) url project.property('url')
+            if (project.hasProperty('inceptionYear'))
+                inceptionYear project.property('inceptionYear')
+            scm {
+                if (project.hasProperty('scm.url'))
+                    url project.property('scm.url')
+                if (project.hasProperty('scm.connection'))
+                    connection project.property('scm.connection')
+                if (project.hasProperty('scm.tag'))
+                    tag project.property('scm.tag')
+            }
+            if (project.hasProperty('org.name')
+                    || project.hasProperty('org.url')) organization {
+                if (project.hasProperty('org.name'))
+                    name project.property('org.name')
+                if (project.hasProperty('org.url'))
+                    url project.property('org.url')
+            }
+            licenses {
+                license {
+                    name 'Apache 2.0'
+                    url 'https://github.com/unsaved/gradle-ivyxml-plugin/blob/master/doc/LICENSE.txt'
+                    distribution 'repo'
+                }
+            }
+            if (project.hasProperty('developer.name')
+                    || project.hasProperty('developer.email')) organization {
+                developers {
+                    developer {
+                        if (project.hasProperty('developer.id'))
+                            id project.property('developer.id')
+                        if (project.hasProperty('developer.name'))
+                            name project.property('developer.name')
+                        if (project.hasProperty('developer.email'))
+                            email project.property('developer.email')
+                    }
+                }
+            }
+        }
+    }
+}
+
+uploadArchives { doFirst {
+    assert project.hasProperty('group') && project.group != '' :
+            '''Property 'group' is required by 'uploadArchives' task.
+'''
+    /*  Unfortunately, Maven plugin has no OOTB way to get a proper
+     *  organization name into the descriptors.
+     *  TODO:  Test this with Gradle 1.0 milestone 6.
+    assert project.hasProperty('organization') && project.organization != '' :
+            '''Property 'organization' is required by 'uploadArchives' task.
+'''
+     */
+    assert project.hasProperty('mavenRepository.dest.url'):
+    '''Property 'mavenRepository.dest.url' is required by 'uploadArchives' task.'''
+
+    assert (project.hasProperty('scm.connection')
+            && project.hasProperty('scm.url')
+            && project.hasProperty('url')
+            && project.hasProperty('inceptionYear')) :
+            '''Following properties required for 'uploadArchives' task:
+    'scm.connection, scm.url, url, inceptionYear'.
+'''
+} }

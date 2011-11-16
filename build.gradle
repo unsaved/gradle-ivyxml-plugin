@@ -1,0 +1,61 @@
+defaultTasks 'jar'
+
+apply plugin: 'groovy'
+
+buildscript {
+    repositories { maven { url 'file:/tmp/fakeMvn' } }
+    dependencies {
+        classpath group: 'com.admc', name: 'gradle-javaPropFile-plugin', version: '0.1-SNAPSHOT'
+    }
+}
+
+apply plugin: 'javaPropFile'
+propFileLoader.traditionalPropertiesInit()
+
+dependencies {
+    compile gradleApi()
+    groovy localGroovy()
+}
+
+task noop << { }
+noop.description = 'Noop task for Gradle testing'
+
+jar { doFirst {
+    String implVendor = (project.hasProperty('organization')
+                        ? project.organization
+                        : System.properties['user.name'])
+    project.metaInf << files('doc/LICENSE.txt')
+    jar { manifest { attributes(
+        'Specification-Title': 'Ivyxml Gradle Plugin',
+        'Specification-Version': project.version,
+        'Specification-Vendor': 'Axis Data Management Corp.',
+        'Implementation-Title': 'Ivyxml Gradle plugin jar',
+        'Implementation-Version': project.version,
+        'Implementation-Vendor': implVendor
+    ) } }
+} }
+
+// This task only for SCM administrator.  Update version and execute this task.
+task updateWrapper(type: Wrapper) { doFirst {
+    assert project.hasProperty('newVersion') :
+        '''Property 'newVersion' is required for task 'updateWrapper'.'''
+    assert project.newVersion == gradle.gradleVersion :
+        "You invoke Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
+} }
+updateWrapper << {
+    gradleVersion = project['newVersion']
+    println 'WARNING:  Merge our customizations into the newly-generated wrapper scripts'
+}
+updateWrapper.description = 'Update Gradle version.  For HSQLDB Administrators.'
+
+task checkTabs << {
+    FileTree tree = fileTree(dir: '..')
+    tree.exclude '**/.*/**'
+    tree.include  '*.*'
+    tree.include  'doc/*'
+    tree.include  'src/**'
+    def tabFiles = []
+    tree.each { if (it.text.indexOf('\t') > -1) tabFiles << relativePath(it) }
+    if (tabFiles.size() > 0) println '  ' + tabFiles.join('\n  ')
+}
+checkTabs.description = 'Reports on any text files containing tab characters'
