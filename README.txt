@@ -8,6 +8,7 @@ http://issues.gradle.org/browse/GRADLE-197, and started with code snippets
 from there.  I have added much more complete support since then.
 
 Advanced features
+
     Support for configuration inheritance via 'extends'
     Support for 'transitive' settings on confs and/or dependencies
     Support for 'classifier's specified using a .../ivy/maven' namespace
