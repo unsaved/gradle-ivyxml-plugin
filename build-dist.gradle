@@ -2,40 +2,38 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 signing {
-    //sign configurations.archives
+    sign configurations.archives
 }
 
 buildscript {
-    repositories { maven { url 'file:/tmp/fakeMvn' } }
+    // This 'buildscript' only here because with current version of Gradle,
+    // 'buildscript' is only honored from the top-level build file executed.
+    // When we "apply" 'build.gradle, the 'buildscript' there will be ignored.
+    repositories { mavenCentral() }
     dependencies {
-        classpath group: 'com.admc', name: 'gradle-javaPropFile-plugin', version: '0.1-SNAPSHOT'
+        classpath 'com.admc:gradle-javaPropFile-plugin:latest.milestone'
     }
 }
 
 apply from: 'build.gradle'
 defaultTasks 'uploadArchives'
 
-configurations { deployJars }
-
-dependencies {
-    if (project.hasProperty('mavenRepository.dest.url')
-            && project.property('mavenRepository.dest.url').
-            startsWith('scp://'))
-        deployJars 'org.apache.maven.wagon:wagon-ssh:2.0'
+artifacts {
+     archives sourcesJar
+     archives javadocJar
 }
 
-// description attribute of project is always set, but may be null
-if (!project.hasProperty('description') ||
-        project.property('description') == null)
-    project.description = '''Support Ivy-native dependency files, traditionally 'ivy.xml'.'''
+configurations { deployJars }
+
+if (project.hasProperty('mavenRepository.dest.url')
+        && project.property('mavenRepository.dest.url').startsWith('scp://')) {
+    repositories { mavenCentral() }
+    dependencies {
+        deployJars 'org.apache.maven.wagon:wagon-ssh:latest.milestone'
+    }
+}
 
 uploadArchives {
-    /*
-    if (!project.hasProperty('mavenRepository.dest.url'))
-        // This crap just to satisfy load-time requirement when the
-        // uploadArchives task won't even be used.
-        project.setProperty('mavenRepository.dest.url', '')
-    */
     def authMap = [:]
     if (project.hasProperty('mavenRepository.dest.username'))
         authMap['userName'] = project.property('mavenRepository.dest.username')
@@ -47,14 +45,18 @@ uploadArchives {
 
     repositories.mavenDeployer {
         configuration = configurations.deployJars
-        //beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+        beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
         if (project.hasProperty('mavenRepository.dest.url'))
             repository(url: project.property('mavenRepository.dest.url')) {
                 authentication(authMap)
             }
         pom.project {
-            name 'Ivyxml Gradle Plugin'
-            description project.description
+            // The hasProperty tests are necessary even for required variables
+            // because this code is evaluated even if the uploadArchives task
+            // will never be executed.
+            if (project.hasProperty('title')) name project.property('title')
+            if (project.hasProperty('description'))
+                description project.property('description')
             if (project.hasProperty('url')) url project.property('url')
             if (project.hasProperty('inceptionYear'))
                 inceptionYear project.property('inceptionYear')
@@ -76,7 +78,7 @@ uploadArchives {
             licenses {
                 license {
                     name 'Apache 2.0'
-                    url 'https://github.com/unsaved/gradle-ivyxml-plugin/blob/master/doc/LICENSE.txt'
+                    url 'https://raw.github.com/unsaved/gradle-ivyxml-plugin/master/doc/LICENSE.txt'
                     distribution 'repo'
                 }
             }
@@ -96,24 +98,11 @@ uploadArchives {
 }
 
 uploadArchives { doFirst {
-    assert project.hasProperty('group') && project.group != '' :
-            '''Property 'group' is required by 'uploadArchives' task.
-'''
-    /*  Unfortunately, Maven plugin has no OOTB way to get a proper
-     *  organization name into the descriptors.
-     *  TODO:  Test this with Gradle 1.0 milestone 6.
-    assert project.hasProperty('organization') && project.organization != '' :
-            '''Property 'organization' is required by 'uploadArchives' task.
-'''
-     */
-    assert project.hasProperty('mavenRepository.dest.url'):
-    '''Property 'mavenRepository.dest.url' is required by 'uploadArchives' task.'''
-
-    assert (project.hasProperty('scm.connection')
-            && project.hasProperty('scm.url')
-            && project.hasProperty('url')
-            && project.hasProperty('inceptionYear')) :
-            '''Following properties required for 'uploadArchives' task:
-    'scm.connection, scm.url, url, inceptionYear'.
-'''
+    for (p in ['title', 'group', 'mavenRepository.dest.url', 'scm.connection',
+            'scm.url', 'url', 'inceptionYear', 'description']) {
+        assert (project.hasProperty(p) && project.property(p) != null
+                && project.property(p) != '') :
+            """Property '$p' is required by 'uploadArchives' task.
+"""
+    }
 } }

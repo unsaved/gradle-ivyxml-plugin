@@ -3,8 +3,7 @@ defaultTasks 'jar'
 apply plugin: 'groovy'
 
 buildscript {
-    repositories { maven { url 'https://oss.sonatype.org/content/groups/staging' } }
-    //repositories { mavenCentral() }
+    repositories { mavenCentral() }
     dependencies {
         classpath 'com.admc:gradle-javaPropFile-plugin:latest.milestone'
     }
@@ -12,6 +11,11 @@ buildscript {
 
 apply plugin: 'javaPropFile'
 propFileLoader.traditionalPropertiesInit()
+
+if (!project.hasProperty('org.name'))
+    project.setProperty('org.name', System.properties['user.name'])
+if (!project.hasProperty('jar.title'))
+    project.setProperty('jar.title', 'Customization')
 
 dependencies {
     compile gradleApi()
@@ -22,17 +26,14 @@ task noop << { }
 noop.description = 'Noop task for Gradle testing'
 
 jar { doFirst {
-    String implVendor = (project.hasProperty('organization')
-                        ? project.organization
-                        : System.properties['user.name'])
     project.metaInf << files('doc/LICENSE.txt')
     jar { manifest { attributes(
         'Specification-Title': 'Ivyxml Gradle Plugin',
-        'Specification-Version': project.version,
+        'Specification-Version': project.property('spec.version'),
         'Specification-Vendor': 'Axis Data Management Corp.',
-        'Implementation-Title': 'Ivyxml Gradle plugin jar',
+        'Implementation-Title': project.property('jar.title'),
         'Implementation-Version': project.version,
-        'Implementation-Vendor': implVendor
+        'Implementation-Vendor': project.property('org.name')
     ) } }
 } }
 
@@ -60,3 +61,15 @@ task checkTabs << {
     if (tabFiles.size() > 0) println '  ' + tabFiles.join('\n  ')
 }
 checkTabs.description = 'Reports on any text files containing tab characters'
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+sourcesJar.description = 'Build sources jar file'
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
+sourcesJar.description = 'Build javadoc jar file'

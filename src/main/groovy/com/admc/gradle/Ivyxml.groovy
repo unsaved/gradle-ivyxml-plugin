@@ -27,11 +27,12 @@ import org.gradle.api.artifacts.Configuration;
  *     User-configurable ivy dep file (a real File instance).
  *     User-configurable additional Ivy variables.
  *
- * Set project property ivyDepFile to File of the Ivy dependencies file if
+ * Set project property depFile to the Ivy dependecy file (type java.io.File)
  * you want to use a file other than "ivy.xml" in the project directory.
  * This corresponds to Ivy property 'ivy.dep.file'.
  *
- * Set project property ivyProperties, for the obvious purpose.
+ * Set project property ivyProperties to a Map<String, String>, for the
+ * obvious purpose.
  *
  * Does not attempt to load any ivysettings files or do any repository setup,
  * only dependency settings.
