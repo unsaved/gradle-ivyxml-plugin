@@ -10,6 +10,12 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'javaPropFile'
 
+def localGradleFile = file('local.gradle')
+if (localGradleFile.isFile()) {
+    logger.info('''Executing optional build file 'localGradleFile'.''')
+    apply from: localGradleFile
+}
+
 // Defaults that can be overridden with property files:
 project.setProperty('org.name', System.properties['user.name'])
 project.setProperty('jar.title', 'Customization')
