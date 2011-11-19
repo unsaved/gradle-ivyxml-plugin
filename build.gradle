@@ -53,7 +53,7 @@ updateWrapper << {
     gradleVersion = project['newVersion']
     println 'WARNING:  Merge our customizations into the newly-generated wrapper scripts'
 }
-updateWrapper.description = 'Update Gradle version.  For HSQLDB Administrators.'
+updateWrapper.description = 'Update Gradle version.  For SCM Administrators.'
 
 task checkTabs << {
     FileTree tree = fileTree(dir: '..')
@@ -77,4 +77,4 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
      classifier = 'javadoc'
      from javadoc.destinationDir
 }
-sourcesJar.description = 'Build javadoc jar file'
+javadocJar.description = 'Build javadoc jar file'
