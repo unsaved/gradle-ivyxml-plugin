@@ -1,7 +1,5 @@
 defaultTasks 'jar'
 
-apply plugin: 'groovy'
-
 buildscript {
     repositories { mavenCentral() }
     dependencies {
@@ -9,11 +7,13 @@ buildscript {
     }
 }
 
+apply plugin: 'groovy'
+apply plugin: 'javaPropFile'
+
 // Defaults that can be overridden with property files:
 project.setProperty('org.name', System.properties['user.name'])
 project.setProperty('jar.title', 'Customization')
 
-apply plugin: 'javaPropFile'
 propFileLoader.traditionalPropertiesInit()
 
 dependencies {
