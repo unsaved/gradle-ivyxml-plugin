@@ -9,13 +9,12 @@ buildscript {
     }
 }
 
+// Defaults that can be overridden with property files:
+project.setProperty('org.name', System.properties['user.name'])
+project.setProperty('jar.title', 'Customization')
+
 apply plugin: 'javaPropFile'
 propFileLoader.traditionalPropertiesInit()
-
-if (!project.hasProperty('org.name'))
-    project.setProperty('org.name', System.properties['user.name'])
-if (!project.hasProperty('jar.title'))
-    project.setProperty('jar.title', 'Customization')
 
 dependencies {
     compile gradleApi()
