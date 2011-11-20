@@ -52,10 +52,8 @@ class Ivyxml {
     }
 
     void load() {
-        // configurations apparently not a Collection, since this doesn't work:
-        //def gradleProjConfMap = configurations.collectEntries { [(it.name): it] }
-        def gradleProjConfMap = [:]
-        for (p in gp.configurations) gradleProjConfMap[p.name] = p
+        def gradleProjConfMap =
+                gp.configurations.collectEntries { [(it.name): it] }
 
         IvySettings ivySettings = new IvySettings();
         ivySettings.defaultInit();
@@ -75,13 +73,14 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
         String mavenNsPrefix = null
         for (e in moduleDescriptor.extraAttributesNamespaces)
             if (e.value.endsWith('/ivy/maven')) { mavenNsPrefix = e.key; break; }
-        for (def confName in moduleDescriptor.configurationsNames) {
-            if (!gradleProjConfMap.containsKey(confName)) continue
+        moduleDescriptor.configurationsNames.each { confName ->
+            if (!gradleProjConfMap.containsKey(confName)) return
             org.apache.ivy.core.module.descriptor.Configuration c =
                     moduleDescriptor.getConfiguration(confName)
             Configuration gradleConfig = gp.configurations.getByName(confName)
-            for (parentConfName in c.getExtends())
+            c.extends.each { parentConfName ->
                 gradleConfig.extendsFrom(gp.configurations.getByName(parentConfName))
+            }
             gradleConfig.transitive = c.transitive
             gradleConfig.visible = c.visibility == Visibility.PUBLIC
             if (gradleConfig.description == null)
@@ -104,11 +103,8 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 if (mavenNsPrefix != null
                         && descriptor.qualifiedExtraAttributes.containsKey(
                         mavenNsPrefix + ':classifier'))
-        {
                     depAttrs['classifier'] = descriptor.qualifiedExtraAttributes[
                             mavenNsPrefix + ':classifier']
-        println "CLASSIFIER=$depAttrs.classifier"
-        }
                 gp.dependencies { dep = add(mappableConfName, depAttrs) }
                 dep.changing = descriptor.changing
                 dep.transitive = descriptor.transitive

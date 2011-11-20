@@ -98,11 +98,11 @@ uploadArchives {
 }
 
 uploadArchives { doFirst {
-    for (p in ['title', 'group', 'mavenRepository.dest.url', 'scm.connection',
-            'scm.url', 'url', 'inceptionYear', 'description']) {
-        assert (project.hasProperty(p) && project.property(p) != null
-                && project.property(p) != '') :
-            """Property '$p' is required by 'uploadArchives' task.
+    ['title', 'group', 'mavenRepository.dest.url', 'scm.connection',
+            'scm.url', 'url', 'inceptionYear', 'description'].each {
+        assert (project.hasProperty(it) && project.property(it) != null
+                && project.property(it) != '') :
+            """Property '$it' is required by 'uploadArchives' task.
 """
     }
 } }
