@@ -25,11 +25,19 @@ artifacts {
 
 configurations { deployJars }
 
-if (project.hasProperty('mavenRepository.dest.url')
-        && project.property('mavenRepository.dest.url').startsWith('scp://')) {
-    repositories { mavenCentral() }
-    dependencies {
-        deployJars 'org.apache.maven.wagon:wagon-ssh:latest.milestone'
+if (project.hasProperty('mavenRepository.dest.url')) {
+    def url = project.property('mavenRepository.dest.url')
+    assert url != null:
+        '''Property 'mavenRepository.dest.url' may not be null
+'''
+    assert url instanceof URL:
+        ('''Property 'mavenRepository.dest.url' must be of type URL.  Is a '''
+                + url.class.name + '\n')
+    if (url.protocol == 'scp') {
+        repositories { mavenCentral() }
+        dependencies {
+            deployJars 'org.apache.maven.wagon:wagon-ssh:latest.milestone'
+        }
     }
 }
 
@@ -104,5 +112,14 @@ uploadArchives { doFirst {
                 && project.property(it) != '') :
             """Property '$it' is required by 'uploadArchives' task.
 """
+    }
+    ['mavenRepository.dest.url', 'scm.url', 'url', 'org.url'].each {
+        assert project.property(it) != null:
+            """Property '$it' may not be null
+"""
+        assert (!project.hasProperty(it)
+                || project.property(it) instanceof URL):
+            ("""Property '$it' must be of type URL.  Is a """
+                    + project.property(it).class.name + '\n')
     }
 } }

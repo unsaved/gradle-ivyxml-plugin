@@ -20,6 +20,7 @@ if (localGradleFile.isFile()) {
 project.setProperty('org.name', System.properties['user.name'])
 project.setProperty('jar.title', 'Customization')
 
+propFileLoader.typeCasting=true
 propFileLoader.traditionalPropertiesInit()
 
 dependencies {
