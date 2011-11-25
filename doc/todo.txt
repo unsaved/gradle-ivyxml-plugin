@@ -1,7 +1,7 @@
 Change property 'ivyProperties' to 'ivyVariables'
 Is it working?
 
-Default variablizeProjStrings to false.
+Change variablizeProjStrings setting to projIvyVariablePrefix.
 
 Test for unsupported XML attributes.
 
