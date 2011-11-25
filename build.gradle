@@ -48,7 +48,7 @@ task updateWrapper(type: Wrapper) { doFirst {
     assert project.hasProperty('newVersion') :
         '''Property 'newVersion' is required for task 'updateWrapper'.'''
     assert project.newVersion == gradle.gradleVersion :
-        "You invoke Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
+        "You invoked Gradle system with version $gradle.gradleVersion instead of desired version $project.newVersion"
 } }
 updateWrapper << {
     gradleVersion = project['newVersion']
