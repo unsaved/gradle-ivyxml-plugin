@@ -96,7 +96,8 @@ SETTINGS
 
     boolean ivyxml.variablizeProjStrings
         If true, then all String type properties of your Gradle Project may
-        be used like ${this} in the ivy.xml file.
+        be used like this in the ivy.xml attribute values:
+            ${gproj|propertyName}
         Defaults to true.
 
 
