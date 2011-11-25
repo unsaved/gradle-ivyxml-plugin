@@ -1,6 +1,7 @@
 package com.admc.gradle;
 
 import org.gradle.api.Project
+import org.gradle.api.GradleException
 import org.apache.ivy.core.settings.IvySettings
 import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor
 import org.apache.ivy.plugins.parser.xml.XmlModuleDescriptorParser
@@ -65,8 +66,11 @@ class Ivyxml {
             """Ivy dep file inaccessible:  $depFile.absolutePath
 Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 """
-        if (ivyProperties != null)
+        if (ivyProperties != null) {
             ivySettings.addAllVariables(ivyProperties, true)
+            gp.logger.info('Added ' + ivyProperties.size()
+                    + ' properties from user-supplied map as Ivy variables')
+        }
         DefaultModuleDescriptor moduleDescriptor =
                 (DefaultModuleDescriptor) XmlModuleDescriptorParser.instance
                 .parseDescriptor(ivySettings, depFile.toURL(), false)
