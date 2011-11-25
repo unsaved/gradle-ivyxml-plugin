@@ -1,0 +1,8 @@
+Change property 'ivyProperties' to 'ivyVariables'
+Is it working?
+
+Default variablizeProjStrings to false.
+
+Test for unsupported XML attributes.
+
+Add setting to auto-add all confs.
