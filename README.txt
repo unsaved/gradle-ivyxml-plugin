@@ -7,6 +7,12 @@ This work was motivated by discussion for issue GRADLE-197 at
 http://issues.gradle.org/browse/GRADLE-197, and started with code snippets
 from there.  I have added much more complete support since then.
 
+This plugin also bundles the Gradle utility method
+    public void com.admc.gradle.VerifyResolve(Configuration)
+This is a work-around for problems where Gradle silently fails to satisfy some
+dependencies.
+
+
 Advanced features
 
     Support for configuration inheritance via 'extends'
@@ -129,6 +135,35 @@ SETTINGS
         be used like this in the ivy.xml attribute values:
             ${gproj|propertyName}
         Defaults to true.
+
+
+UTILITY METHOD
+
+    void com.admc.gradle.GradleUtil.verifyResolve(Configuration)
+    Throws if all dependencies of the specified Configuration have not been
+    satisfied by at least one artifact.
+    This method is entirely independent of Ivy XML functionality and is
+    bundled here only because it was convenient for me to do so.
+    Use it like so:
+
+    buildscript {
+        repositories { mavenCentral() }
+        dependencies {
+            classpath 'com.admc:gradle-ivyxml-plugin:latest.milestone'
+        }
+    }
+
+    apply plugin: 'ivyxml'
+
+    import com.admc.gradle.GradleUtil
+
+    compileJava.doFirst { GradleUtil.verifyResolve(configurations.compile) }
+    // And so forth for all tasks that elicit an Ivy resolve.
+
+    If you get a complaint like "ERRORS a required artifact is not listed by
+    module descriptor: *!.*", just rerun the same Gradle command with the
+    -s switch.  You will get a clean report about the missing artifacts.
+
 
 
 CLASSIFIERS
