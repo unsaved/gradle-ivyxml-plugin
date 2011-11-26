@@ -8,10 +8,12 @@ import org.apache.ivy.plugins.parser.xml.XmlModuleDescriptorParser
 import org.apache.ivy.core.module.descriptor.DependencyDescriptor
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.module.descriptor.DependencyArtifactDescriptor
+import org.apache.ivy.core.module.descriptor.Configuration.Visibility
+import org.apache.ivy.core.module.descriptor.OverrideDependencyDescriptorMediator
+
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
 import org.gradle.api.internal.artifacts.dependencies.DefaultDependencyArtifact
 import org.gradle.api.internal.artifacts.DefaultExcludeRule
-import org.apache.ivy.core.module.descriptor.Configuration.Visibility
 import org.gradle.api.artifacts.Configuration;
 
 /**
@@ -42,6 +44,15 @@ import org.gradle.api.artifacts.Configuration;
  */
 
 class Ivyxml {
+    /*
+     * I don't see from Ivy API how I can detect a publications element.
+     * If learn how to, display a warning that this plugin does nothing with
+     * that element.
+     *
+     * DefaultDependencyArtifact is pretty essential here, and is not in the
+     * public API.
+     * http://massapi.com/source/gradle-0.9-rc-3/subprojects/gradle-core/src/main/groovy/org/gradle/api/internal/artifacts/dependencies/DefaultDependencyArtifact.java.html
+     */
     private Project gp
     File depFile
     Map<String, String> ivyProperties
@@ -74,6 +85,12 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
         DefaultModuleDescriptor moduleDescriptor =
                 (DefaultModuleDescriptor) XmlModuleDescriptorParser.instance
                 .parseDescriptor(ivySettings, depFile.toURL(), false)
+        if (moduleDescriptor.allDependencyDescriptorMediators.any {
+            it.allRules.values().any {
+                it instanceof OverrideDependencyDescriptorMediator
+            }
+        }) throw new GradleException(
+                '''Ivy 'override' element not supported yet''')
         String mavenNsPrefix = null
         for (e in moduleDescriptor.extraAttributesNamespaces)
             if (e.value.endsWith('/ivy/maven')) { mavenNsPrefix = e.key; break; }
@@ -97,8 +114,21 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 }
             for (mappableConfName in mappableConfNames) {
                 if (!mappableConfName) return
+                if (descriptor.canExclude())
+                    // This catches <dependency><exclude>, but not
+                    // <dependencies><exclude>.
+                    throw new GradleException(
+                    '''Plugin does not yet support dependency 'exclude'.''')
+                if (descriptor.allIncludeRules.size() != 0)
+                    throw new GradleException(
+                    '''Plugin does not yet support dependency 'include'.''')
+                if (descriptor.force)
+                    throw new GradleException(
+                            '''Gradle does not support Ivy 'force'.''')
                 ModuleRevisionId id = descriptor.dependencyRevisionId
-                DefaultExternalModuleDependency dep
+                if (id.branch != null)
+                    throw new GradleException(
+                            '''Gradle does not support Ivy 'branches'.''')
                 def depAttrs = [
                     group: id.organisation,
                     name: id.name,
@@ -109,19 +139,35 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                         mavenNsPrefix + ':classifier'))
                     depAttrs['classifier'] = descriptor.qualifiedExtraAttributes[
                             mavenNsPrefix + ':classifier']
+                DefaultExternalModuleDependency dep
                 gp.dependencies { dep = add(mappableConfName, depAttrs) }
                 dep.changing = descriptor.changing
                 dep.transitive = descriptor.transitive
 
                 descriptor.allDependencyArtifacts.each {
                     DependencyArtifactDescriptor depArt ->
+                       // depArt.configurations will always be populated here,
+                       // even if no conf attribute or element inside of
+                       // <dependencies>.
+                        // FUCKING IMPOSSIBLE to detect conf attr or subelement
+                        // here!  The 'conf' attr doesn't even appear like
+                        // every other attr does with
+                        // depArt.getAttribute('conf')
+                        // or depArt.getAttributes().
                         dep.addArtifact(new DefaultDependencyArtifact(
+                          // TODO:  Try to set classifier here.
+                          // the param of this constructor is for classifier.
                                 depArt.name, depArt.type, depArt.ext, null, depArt.url))
                 }
 
                 def excRuleContainer = dep.excludeRules
                 descriptor.excludeRules?.values().each {
                     def ruleList -> ruleList.each {
+                        throw new GradleException(
+                                'Excludes not supported by plugin yet')
+                        // Following statement is totally broken.
+                        // Ivy and Gradle use different names for these
+                        // attributes, so you can't just share an att. map.
                         excRuleContainer.add(new DefaultExcludeRule(it.attributes))
                     }
                 }

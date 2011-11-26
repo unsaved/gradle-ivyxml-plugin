@@ -1,0 +1,13 @@
+<ivy-module version="2.0">
+  <info organisation="admc.com" module="unittest"/>
+  <configurations defaultconf="defaultConf">
+    <conf name="defaultConf" description="Trivially simple conf"
+          transitive="false"/>
+  </configurations>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="commons-lang" name="commons-lang" rev="2.6"/>
+  </dependencies>
+  <conflicts>
+    <manager name="latest-time"/>
+  </conflicts>
+</ivy-module>

@@ -17,6 +17,33 @@ Advanced features
     User-configurable ivy dep file (a real File instance).
     User-configurable additional Ivy variables.
 
+UNSUPPORTED ivy.xml features
+    The following ivy.xml elements and attributes are ignored.  I did my best
+    to detect and either, support, throw or warn, but the public Ivy API just
+    does not allow for access to these settings.
+        <conflicts> (and all attrs and sub-elements)
+        <dependencies><exclude> 
+        <dependencies><dependency><conf>  (For conf-mapping)
+        <dependencies><dependency><artifact conf="...">  attr.
+        <dependencies><dependency><*><conf>
+
+    The following elements and attribute are purposefully prohibited.  We don't
+    support them, it would be misleading to silently ignore then, and we can
+    detect their usage.
+        <dependencies><dependency><exclude>  TO BE SUPPORTED SOON!
+        <dependencies><override>
+        <dependencies><dependency branch="..." force="..."  attrs.
+        
+    These elements and attributes are purposefully ignored, because the user may
+    want to profitably process the same "ivy.xml" file with another tool the can
+    make use of them.
+        <info> (and all attrs and sub-elements)  (Element is required by Ivy)
+        <publications>  (and all attrs and sub-elements)
+        <dependencies><dependency revConstraint="...">
+          (Will differ from "rev" only when publishing, which is not a use case
+          for us).
+        <dependencies><dependency revConstraint="..."  attr.
+
 
 USAGE
 
