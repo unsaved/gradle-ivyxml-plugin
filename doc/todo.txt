@@ -4,6 +4,7 @@ Is it working?
 Change variablizeProjStrings setting to projIvyVariablePrefix.
 
 Add setting to auto-add all confs.
+With current manual-conf-add, do add required ancestor confs automatically.
 
 Fix exclude specifications.  First have to find out how to get the Ivy side
 specifications for it, and I am not finding this in the Ivy API.
