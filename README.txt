@@ -26,15 +26,21 @@ Advanced features
      auto-instantiate Gradle Configurations.
 
 Recent functional changes.
-    With release 1.0-milestone-6, excludes stopped having an effect.
-    I believe that this is a bug with Gradle and will open a Gradle Issue once
-    I confirm.  Until this is resolved, be aware of using 
+    With release 1.0-milestone-6, <dependency><exclude>s stopped having an
+    effect.
+    I don't yet know if this is a problem with Gradle or with this plugin, but
+    I have already expended more time on it than is justified for a feature
+    that I am not using now.
+    Until this is resolved, be aware of using 
         <dependencies><dependency><exclude>
     elements.  3 unit tests of this plugin project will continue to fail until
     this is resolved.
-    It is very possible that this is fixed in Gradle before you use this plugin.
+    It is very possible that this may be fixed in Gradle before you use this
+    plugin.
     To find out, you can ask me, or you can pull the source code for this
     project and run the Gradle task 'test'.
+    I will fix this when somebody lends a hand, or when I need this feature
+    (like to narrow transitive dependencies).
 
     New users can safely skip the remainder of this section.
 
