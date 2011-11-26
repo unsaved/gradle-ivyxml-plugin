@@ -1,6 +1,3 @@
-Change property 'ivyProperties' to 'ivyVariables'
-Is it working?
-
 Change variablizeProjStrings setting to projIvyVariablePrefix.
 
 Add setting to auto-add all confs.

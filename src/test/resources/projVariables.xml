@@ -5,6 +5,7 @@
           transitive="false"/>
   </configurations>
   <dependencies defaultconfmapping="*->default">
-    <dependency org="commons-lang" name="commons-lang" rev="2.6"/>
+    <dependency org="org.${gproj|utest.orgsuffix}"
+                name="${gproj|utest.module}" rev="2.2.6"/>
   </dependencies>
 </ivy-module>

@@ -2,6 +2,7 @@ package com.admc.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.GradleException
+import org.gradle.api.artifacts.ResolveException
 import org.gradle.testfixtures.ProjectBuilder
 import static org.junit.Assert.*
 import org.gradle.api.artifacts.ModuleDependency
@@ -9,6 +10,8 @@ import org.gradle.api.artifacts.DependencyArtifact
 import java.util.regex.Pattern
 
 class IvyxmlPluginTest {
+    private Project project
+
     private static void load(String baseName, Ivyxml ix) {
         URL url = Thread.currentThread().contextClassLoader.getResource(
                 baseName + '.xml')
@@ -23,16 +26,14 @@ class IvyxmlPluginTest {
         ix.load()
     }
 
-    private static Project prepProject() {
-        Project proj = ProjectBuilder.builder().build()
-        proj.apply plugin: IvyxmlPlugin
-        proj.repositories { mavenCentral() }
-        return proj
+    {
+        project = ProjectBuilder.builder().build()
+        project.apply plugin: IvyxmlPlugin
+        project.repositories { mavenCentral() }
     }
 
     @org.junit.Test
     void trivial() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('trivial', project.ivyxml)
         //System.err.println('**' + project.configurations.defaultConf.files.join('|'))
@@ -42,7 +43,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void classifier() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('classifier', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -57,7 +57,6 @@ class IvyxmlPluginTest {
      * Ivy it does a terrible job at identifying the problem and throws a NPE.
      */
     void missingInfo() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('noinfo', project.ivyxml)
     }
@@ -68,7 +67,6 @@ class IvyxmlPluginTest {
      * process it with something else, so leave it be.
      */
     void publications() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('publications', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -81,7 +79,6 @@ class IvyxmlPluginTest {
      * here.
     @org.junit.Test(expected=GradleException.class)
     void conflicts() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('conflicts', project.ivyxml)
     }
@@ -89,7 +86,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludeNegOrg() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegOrg', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -98,7 +94,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludeNegMod() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegMod', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -107,7 +102,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludeNegAll() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegAll', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -116,7 +110,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludePosAll() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosAll', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
@@ -124,7 +117,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludePosOrg() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosOrg', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
@@ -132,7 +124,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludePosMod() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosMod', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
@@ -143,7 +134,6 @@ class IvyxmlPluginTest {
      */
     @org.junit.Test(expected=GradleException.class)
     void include() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('include', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -155,7 +145,6 @@ class IvyxmlPluginTest {
      DISABLING SINCE IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void dependenciesExclude() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependenciesExclude', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -165,7 +154,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test(expected=GradleException.class)
     void override() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('override', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -173,21 +161,18 @@ class IvyxmlPluginTest {
 
     @org.junit.Test(expected=GradleException.class)
     void branch() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('branch', project.ivyxml)
     }
 
     @org.junit.Test(expected=GradleException.class)
     void force() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('force', project.ivyxml)
     }
 
     @org.junit.Test
     void artifact() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('artifact', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -205,7 +190,6 @@ class IvyxmlPluginTest {
      IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void confNarrowAttr() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowAttr', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -221,7 +205,6 @@ class IvyxmlPluginTest {
      IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void confNarrowEl() {
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowEl', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -229,6 +212,9 @@ class IvyxmlPluginTest {
      */
 
     @org.junit.Test
+    /**
+     * This also tests ivyVariables
+     */
     void includeFile() {
         File incFile = File.createTempFile('ivyinclude', '.xml')
         incFile.deleteOnExit()
@@ -238,9 +224,8 @@ class IvyxmlPluginTest {
         transitive="false"/>
 </configurations>
 ''', 'UTF-8')
-        Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
-        project.ivyxml.ivyProperties = [incFilePath: incFile.absolutePath]
+        project.ivyxml.ivyVariables = [incFilePath: incFile.absolutePath]
         IvyxmlPluginTest.load('includeFile', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -251,13 +236,12 @@ class IvyxmlPluginTest {
      */
 
     @org.junit.Test
-    void sysProperty() {
-        Project project = IvyxmlPluginTest.prepProject()
+    void ivyDepFileSysProperty() {
         project.configurations { defaultConf }
         URL url = Thread.currentThread().contextClassLoader.getResource(
-                'sysProperty.xml')
+                'trivial.xml')
         assert url != null:
-            '''XML file not found as resource in classpath:  sysProperty.xml
+            '''XML file not found as resource in classpath:  trivial.xml
 '''
         File newFile = File.createTempFile('ivytest', '.xml')
         newFile.deleteOnExit()
@@ -271,5 +255,78 @@ class IvyxmlPluginTest {
             System.setProperty('ivy.dep.file', origSysPropertyValue)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void variables() {
+        project.configurations { defaultConf }
+        project.ivyxml.ivyVariables =
+                [('utest.orgsuffix'): 'hsqldb', ('utest.module'): 'sqltool']
+        IvyxmlPluginTest.load('variables', project.ivyxml)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertTrue(
+                project.configurations.defaultConf.files.asList().first().name
+                .startsWith('sqltool-'))
+    }
+
+    @org.junit.Test
+    void unsetVariables() {
+        project.configurations { defaultConf }
+        project.ivyxml.ivyVariables = [('utest.orgsuffix'): 'hsqldb']
+        // Setting only 1 variable where 2 are required
+        assertEquals(0, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void sysProperties() {
+        project.configurations { defaultConf }
+        String origOrgSuffixValue = System.properties['utest.orgsuffix']
+        String origModuleValue = System.properties['utest.module']
+        System.setProperty('utest.orgsuffix', 'hsqldb')
+        System.setProperty('utest.module', 'sqltool')
+        IvyxmlPluginTest.load('variables', project.ivyxml)
+        if (origOrgSuffixValue == null)
+            System.clearProperty('utest.orgsuffix')
+        else
+            System.setProperty('utest.orgsuffix', origOrgSuffixValue)
+        if (origModuleValue == null)
+            System.clearProperty('utest.module')
+        else
+            System.setProperty('utest.module', origModuleValue)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertTrue(
+                project.configurations.defaultConf.files.asList().first().name
+                .startsWith('sqltool-'))
+    }
+
+    @org.junit.Test
+    void projProperties() {
+        project.configurations { defaultConf }
+        assert !project.hasProperty('utest.orgsuffix')
+        assert !project.hasProperty('utest.module')
+        project.setProperty('utest.orgsuffix', 'hsqldb')
+        project.setProperty('utest.module', 'sqltool')
+        IvyxmlPluginTest.load('projVariables', project.ivyxml)
+        // Gradle does not support clearing of property values
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertTrue(
+                project.configurations.defaultConf.files.asList().first().name
+                .startsWith('sqltool-'))
+    }
+
+    @org.junit.Test(expected=ResolveException.class)
+    void unsetProjProperties() {
+        project.configurations { defaultConf }
+        assert !project.hasProperty('utest.orgsuffix')
+        assert !project.hasProperty('utest.module')
+        project.setProperty('utest.orgsuffix', 'hsqldb')
+        project.setProperty('utest.module', 'sqltool')
+        project.ivyxml.variablizeProjStrings = false
+        IvyxmlPluginTest.load('projVariables', project.ivyxml)
+        // Gradle does not support clearing of property values
+        project.configurations.defaultConf.files.size()
     }
 }

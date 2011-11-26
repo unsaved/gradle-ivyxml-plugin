@@ -34,7 +34,7 @@ class Ivyxml {
      */
     private Project gp
     File depFile
-    Map<String, String> ivyProperties
+    Map<String, String> ivyVariables
     boolean variablizeProjStrings = true
 
     Ivyxml(Project p) {
@@ -59,9 +59,9 @@ class Ivyxml {
             """Ivy dep file inaccessible:  $file.absolutePath
 Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 """
-        if (ivyProperties != null) {
-            ivySettings.addAllVariables(ivyProperties, true)
-            gp.logger.info('Added ' + ivyProperties.size()
+        if (ivyVariables != null) {
+            ivySettings.addAllVariables(ivyVariables, true)
+            gp.logger.info('Added ' + ivyVariables.size()
                     + ' properties from user-supplied map as Ivy variables')
         }
         DefaultModuleDescriptor moduleDescriptor =

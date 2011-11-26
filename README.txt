@@ -28,6 +28,7 @@ Recent functional changes.  New users can skip this section.
     The following behaviors changed after v. 0.2.1.
         ~ Support for Java system property "ivy.dep.file".  Search for
           "system property" below for details.
+        ~ Plugin property name 'ivyProperties' changed to 'ivyVariables'
 
 UNSUPPORTED ivy.xml features
     Most ivy.xml elements and attributes are supported.  Here we document those
@@ -128,6 +129,10 @@ Use plugin jar file locally.
 
 SETTINGS
 
+    Java system properties are ALWAYS available in the dependency file as Ivy
+    variables.  This behavior is mandated by Ivy's own 'IvySettings'
+    constructor.
+
     File ivyxml.depFile
         The Ivy dependency file to load when ivyxml.load() is executed.
         Corresponds to native Ivy property 'ivy.dep.file'.
@@ -135,11 +140,12 @@ SETTINGS
         then defaults to file(...) of that value, otherwise (for all versions
         of Ivyxml) defaults to file('ivy.xml').
 
-    Map<String, String> ivyxm.ivyProperties
+    Map<String, String> ivyxm.ivyVariables
         You can use these variables in the ivy.xml file like ${this}.
-        By the way, you can always reference Java system properties in the
-        same way.
-        Defaults to null
+        [Before version 0.3.0 of this plugin, this property was named
+        'ivyProperties'].
+        Defaults to null (only Ivy's default variables, and Java system
+        properties will be available in the dependency file).
 
     boolean ivyxml.variablizeProjStrings
         If true, then all String type properties of your Gradle Project may
