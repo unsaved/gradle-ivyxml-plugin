@@ -19,9 +19,11 @@ Advanced features
     Support for 'transitive' settings on confs and/or dependencies
     Support for 'classifier's specified using a .../ivy/maven' namespace
     Automatically set Ivy variables for every Gradle String-type property.
-      (With keys all prefixed with 'gproj|', e.g. use ${gproj|name}).
+      (Default key prefix is 'gproj|', so reference with ${gproj|name}).
     User-configurable ivy dep file (a real File instance).
     User-configurable additional Ivy variables.
+    User-configurable whether to ignore non-instantiated confs or to
+     auto-instantiate Gradle Configurations.
 
 Recent functional changes.
     With release 1.0-milestone-6, excludes stopped having an effect.
@@ -43,6 +45,16 @@ Recent functional changes.
         ~ Plugin boolean property 'variablizeProjStrings' replaced with
           String property projIvyVariablePrefix.
           Search for "projIvyVariablePrefix" below for details.
+        ~ By default every configuration referenced in the ivy.xml file is
+          automatically instantiated if it does not already exist.
+          This behavior can be toggled with new boolean property
+          'instantiateConfigurations'.  If 'instantiateConfigurations' is
+          false, then like previously, ivy.xml entries for non-existing
+          confs will be ignored.
+        ~ Even with 'instantiateConfigurations' false, if a conf (that exists
+          in your Gradle project) extends a conf that does not yet exist in
+          Gradle, it will be automatically instantiated.  In this situation,
+          nothing useful could happen by either ignoring or aborting.
 
 UNSUPPORTED ivy.xml features
     Most ivy.xml elements and attributes are supported.  Here we document those
@@ -93,12 +105,6 @@ Pull plugin from Internet.
         apply plugin: 'ivyxml'
         apply plugin: 'java'  // Load any plugins that define configurations
         ...
-        configurations {
-        ...             // Define your custom configurations
-        }
-        // Before the "ivyxml.load()", you must define all configurations
-        // that you want to populate from the ivy.xml file.  Other confs in
-        // the ivy.xml file with be ignored.
         ivyxml.load()
         // Note that the load() does not resolve or download anything.
         // What load()s are dependency records.
@@ -125,14 +131,7 @@ Use plugin jar file locally.
             )
         } }
         apply plugin: 'ivyxml'
-        apply plugin: 'java'  // Load any plugins that define configurations
-        ...
-        configurations {
         ...             // Define your custom configurations
-        }
-        // Before the "ivyxml.load()", you must define all configurations
-        // that you want to populate from the ivy.xml file.  Other confs in
-        // the ivy.xml file with be ignored.
         ivyxml.load()
         // Note that the load() does not resolve or download anything.
         // What load()s are dependency records.
@@ -153,6 +152,18 @@ SETTINGS
         After Ivyxml v. 0.2.1, if Java system property "ivy.dep.file" is set,
         then defaults to file(...) of that value, otherwise (for all versions
         of Ivyxml) defaults to file('ivy.xml').
+    
+    boolean ivyxml.instantiateConfigurations
+        Indicates whether to automatically instantiate Gradle Configurations
+        when Ivy confs are encountered without corresponding Gradle
+        Configuration.
+        Regardless of this setting, a Gradle Configuration 'x' will always be
+        instantiated when setting up a conf that exends 'x'.
+        This setting only effects conf definitions that are not extended by
+        an existing Configuration.
+        If set to false, you must ensure that all Configurations to be effected
+        by the ivy.xml file have been created ahead of time.
+        Defaults to true, so everything "just works" by default.
 
     Map<String, String> ivyxm.ivyVariables
         You can use these variables in the ivy.xml file with references like

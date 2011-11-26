@@ -34,16 +34,13 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void trivial() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('trivial', project.ivyxml)
-        //System.err.println('**' + project.configurations.defaultConf.files.join('|'))
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
     @org.junit.Test
     void classifier() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('classifier', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -57,7 +54,6 @@ class IvyxmlPluginTest {
      * Ivy it does a terrible job at identifying the problem and throws a NPE.
      */
     void missingInfo() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('noinfo', project.ivyxml)
     }
 
@@ -67,7 +63,6 @@ class IvyxmlPluginTest {
      * process it with something else, so leave it be.
      */
     void publications() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('publications', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -79,14 +74,12 @@ class IvyxmlPluginTest {
      * here.
     @org.junit.Test(expected=GradleException.class)
     void conflicts() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('conflicts', project.ivyxml)
     }
     */
 
     @org.junit.Test
     void dependencyExcludeNegOrg() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegOrg', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -94,7 +87,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludeNegMod() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegMod', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -102,7 +94,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludeNegAll() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegAll', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -110,21 +101,18 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void dependencyExcludePosAll() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosAll', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
     }
 
     @org.junit.Test
     void dependencyExcludePosOrg() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosOrg', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
     }
 
     @org.junit.Test
     void dependencyExcludePosMod() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludePosMod', project.ivyxml)
         assertEquals(0, project.configurations.defaultConf.files.size())
     }
@@ -134,7 +122,6 @@ class IvyxmlPluginTest {
      */
     @org.junit.Test(expected=GradleException.class)
     void include() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('include', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -145,7 +132,6 @@ class IvyxmlPluginTest {
      DISABLING SINCE IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void dependenciesExclude() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependenciesExclude', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -154,26 +140,22 @@ class IvyxmlPluginTest {
 
     @org.junit.Test(expected=GradleException.class)
     void override() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('override', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
 
     @org.junit.Test(expected=GradleException.class)
     void branch() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('branch', project.ivyxml)
     }
 
     @org.junit.Test(expected=GradleException.class)
     void force() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('force', project.ivyxml)
     }
 
     @org.junit.Test
     void artifact() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('artifact', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
@@ -190,7 +172,6 @@ class IvyxmlPluginTest {
      IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void confNarrowAttr() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowAttr', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
@@ -205,7 +186,6 @@ class IvyxmlPluginTest {
      IMPOSSIBLE TO DETECT
     @org.junit.Test(expected=GradleException.class)
     void confNarrowEl() {
-        project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowEl', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
@@ -224,7 +204,6 @@ class IvyxmlPluginTest {
         transitive="false"/>
 </configurations>
 ''', 'UTF-8')
-        project.configurations { defaultConf }
         project.ivyxml.ivyVariables = [incFilePath: incFile.absolutePath]
         IvyxmlPluginTest.load('includeFile', project.ivyxml)
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -237,7 +216,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void ivyDepFileSysProperty() {
-        project.configurations { defaultConf }
         URL url = Thread.currentThread().contextClassLoader.getResource(
                 'trivial.xml')
         assert url != null:
@@ -259,7 +237,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void variables() {
-        project.configurations { defaultConf }
         project.ivyxml.ivyVariables =
                 [('utest.orgsuffix'): 'hsqldb', ('utest.module'): 'sqltool']
         IvyxmlPluginTest.load('variables', project.ivyxml)
@@ -280,7 +257,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void sysProperties() {
-        project.configurations { defaultConf }
         String origOrgSuffixValue = System.properties['utest.orgsuffix']
         String origModuleValue = System.properties['utest.module']
         System.setProperty('utest.orgsuffix', 'hsqldb')
@@ -303,7 +279,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void projProperties() {
-        project.configurations { defaultConf }
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
         project.setProperty('utest.orgsuffix', 'hsqldb')
@@ -319,7 +294,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test(expected=ResolveException.class)
     void unsetProjProperties() {
-        project.configurations { defaultConf }
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
         project.setProperty('utest.orgsuffix', 'hsqldb')
@@ -332,7 +306,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test(expected=ResolveException.class)
     void badProjPrefixProperties() {
-        project.configurations { defaultConf }
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
         project.setProperty('utest.orgsuffix', 'hsqldb')
@@ -345,7 +318,6 @@ class IvyxmlPluginTest {
 
     @org.junit.Test
     void projPrefixProperties() {
-        project.configurations { defaultConf }
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
         project.setProperty('utest.orgsuffix', 'hsqldb')
@@ -358,5 +330,57 @@ class IvyxmlPluginTest {
         assertTrue(
                 project.configurations.defaultConf.files.asList().first().name
                 .startsWith('sqltool-'))
+    }
+
+    @org.junit.Test
+    void noConfs() {
+        assertEquals(0, project.configurations.size())
+        project.ivyxml.instantiateConfigurations = false
+        IvyxmlPluginTest.load('nestedConfs', project.ivyxml)
+        assertEquals(0, project.configurations.size())
+    }
+
+    @org.junit.Test
+    void nestedConfs() {
+        assertEquals(0, project.configurations.size())
+        IvyxmlPluginTest.load('nestedConfs', project.ivyxml)
+        assertEquals(4, project.configurations.size())
+        GradleUtil.verifyResolve(project.configurations.b)
+        GradleUtil.verifyResolve(project.configurations.b1)
+        GradleUtil.verifyResolve(project.configurations.b2)
+        GradleUtil.verifyResolve(project.configurations.c)
+        assertEquals(1, project.configurations.b.files.size())
+        assertEquals(2, project.configurations.b1.files.size())
+        assertEquals(2, project.configurations.b2.files.size())
+        assertEquals(4, project.configurations.c.files.size())
+    }
+
+    @org.junit.Test
+    void nestedConfsSomePrexistingConfs() {
+        project.configurations { b1 }
+        assertEquals(1, project.configurations.size())
+        IvyxmlPluginTest.load('nestedConfs', project.ivyxml)
+        assertEquals(4, project.configurations.size())
+        GradleUtil.verifyResolve(project.configurations.b)
+        GradleUtil.verifyResolve(project.configurations.b1)
+        GradleUtil.verifyResolve(project.configurations.b2)
+        GradleUtil.verifyResolve(project.configurations.c)
+        assertEquals(1, project.configurations.b.files.size())
+        assertEquals(2, project.configurations.b1.files.size())
+        assertEquals(2, project.configurations.b2.files.size())
+        assertEquals(4, project.configurations.c.files.size())
+    }
+
+    @org.junit.Test
+    void nestedConfsIgnoreSome() {
+        project.configurations { b2 }
+        assertEquals(1, project.configurations.size())
+        project.ivyxml.instantiateConfigurations = false
+        IvyxmlPluginTest.load('nestedConfs', project.ivyxml)
+        assertEquals(2, project.configurations.size())
+        GradleUtil.verifyResolve(project.configurations.b)
+        GradleUtil.verifyResolve(project.configurations.b2)
+        assertEquals(1, project.configurations.b.files.size())
+        assertEquals(2, project.configurations.b2.files.size())
     }
 }

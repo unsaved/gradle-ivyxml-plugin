@@ -36,6 +36,7 @@ class Ivyxml {
     File depFile
     Map<String, String> ivyVariables
     String projIvyVariablePrefix = 'gproj|'
+    boolean instantiateConfigurations = true
 
     Ivyxml(Project p) {
         gp = p
@@ -78,11 +79,20 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
         for (e in moduleDescriptor.extraAttributesNamespaces)
             if (e.value.endsWith('/ivy/maven')) { mavenNsPrefix = e.key; break; }
         moduleDescriptor.configurationsNames.each { confName ->
-            if (!gradleProjConfMap.containsKey(confName)) return
+            if (!gradleProjConfMap.containsKey(confName)) {
+                if (!instantiateConfigurations) return
+                gp.configurations {
+                    gradleProjConfMap[confName] = add(confName)
+                }
+            }
             org.apache.ivy.core.module.descriptor.Configuration c =
                     moduleDescriptor.getConfiguration(confName)
             Configuration gradleConfig = gp.configurations.getByName(confName)
             c.extends.each { parentConfName ->
+                if (!gradleProjConfMap.containsKey(parentConfName))
+                    gp.configurations {
+                        gradleProjConfMap[parentConfName] = add(parentConfName)
+                    }
                 gradleConfig.extendsFrom(gp.configurations.getByName(parentConfName))
             }
             gradleConfig.transitive = c.transitive

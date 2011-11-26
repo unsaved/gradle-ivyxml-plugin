@@ -1,0 +1,16 @@
+<ivy-module version="2.0">
+  <info organisation="admc.com" module="unittest"/>
+  <configurations defaultconf="b1">
+    <conf name="b1" description="Child conf b1" transitive="false" extends="b"/>
+    <conf name="b" description="Base conf" transitive="false"/>
+    <conf name="c" description="All-inclusive conf c"
+          transitive="false" extends="b1, b2"/>
+    <conf name="b2" description="Child conf b2" transitive="false" extends="b"/>
+  </configurations>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="b"/>
+    <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"/>
+    <dependency org="org.hsqldb" name="sqltool" rev="2.2.6" conf="b2"/>
+    <dependency org="org.jdom" name="jdom" rev="1.1.2" conf="c"/>
+  </dependencies>
+</ivy-module>
