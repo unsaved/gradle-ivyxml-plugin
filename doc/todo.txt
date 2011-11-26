@@ -1,8 +1,3 @@
-Add setting to auto-add all confs.
-With current manual-conf-add, do add required ancestor confs automatically.
-
-Add unit tests for extended confs.
-
 Fix <dependencies><exclude> specifications.  First have to find out how to get
 the Ivy side specifications for it, and I am not finding this in the Ivy API.
     Don't know if Gradle dependency-specific ones support narrowing to a conf.
