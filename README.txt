@@ -3,6 +3,9 @@ Ivyxml Gradle Plugin
 This plugin loads dependency definitions from an Ivy dependency file
 (aka "ivy.xml") into Gradle.
 
+Purposefully does not do anything with any ivysettings.xml file.  Purposefully
+ignores publishing-related ivy.xml elements and attributes.
+
 This work was motivated by discussion for issue GRADLE-197 at
 http://issues.gradle.org/browse/GRADLE-197, and started with code snippets
 from there.  I have added much more complete support since then.
