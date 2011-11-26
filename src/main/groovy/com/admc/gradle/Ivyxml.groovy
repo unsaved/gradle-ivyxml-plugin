@@ -166,7 +166,6 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 def excRuleContainer = dep.excludeRules
                 descriptor.excludeRules?.values().each {
                     def ruleList -> ruleList.each {
-System.err.println('Ivy attrs = ' + it.attributes)
                         def excludeAttrs = [:]
                         it.attributes.each { k, v ->
                             if (k == 'matcher') {
