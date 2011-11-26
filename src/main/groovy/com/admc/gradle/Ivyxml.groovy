@@ -35,7 +35,7 @@ class Ivyxml {
     private Project gp
     File depFile
     Map<String, String> ivyVariables
-    boolean variablizeProjStrings = true
+    String projIvyVariablePrefix = 'gproj|'
 
     Ivyxml(Project p) {
         gp = p
@@ -47,9 +47,10 @@ class Ivyxml {
 
         IvySettings ivySettings = new IvySettings();
         ivySettings.defaultInit();
-        if (variablizeProjStrings) gp.project.properties.each {
+        if (projIvyVariablePrefix != null) gp.project.properties.each {
             if (it.value instanceof String)
-                ivySettings.setVariable('gproj|' + it.key, it.value, true)
+                ivySettings.setVariable(
+                        projIvyVariablePrefix + it.key, it.value, true)
         }
         File file = ((depFile == null)
                 ? gp.file((System.properties['ivy.dep.file'] == null)

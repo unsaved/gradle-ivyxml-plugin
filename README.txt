@@ -23,8 +23,7 @@ Advanced features
     User-configurable ivy dep file (a real File instance).
     User-configurable additional Ivy variables.
 
-Recent functional changes.  New users can skip this section.
-
+Recent functional changes.
     With release 1.0-milestone-6, excludes stopped having an effect.
     I believe that this is a bug with Gradle and will open a Gradle Issue once
     I confirm.  Until this is resolved, be aware of using 
@@ -32,10 +31,15 @@ Recent functional changes.  New users can skip this section.
     elements.  3 unit tests of this plugin project will continue to fail until
     this is resolved.
 
+    New users can safely skip the remainder of this section.
+
     The following behaviors changed after v. 0.2.1.
         ~ Support for Java system property "ivy.dep.file".  Search for
           "system property" below for details.
         ~ Plugin property name 'ivyProperties' changed to 'ivyVariables'
+        ~ Plugin boolean property 'variablizeProjStrings' replaced with
+          String property projIvyVariablePrefix.
+          Search for "projIvyVariablePrefix" below for details.
 
 UNSUPPORTED ivy.xml features
     Most ivy.xml elements and attributes are supported.  Here we document those
@@ -148,17 +152,23 @@ SETTINGS
         of Ivyxml) defaults to file('ivy.xml').
 
     Map<String, String> ivyxm.ivyVariables
-        You can use these variables in the ivy.xml file like ${this}.
+        You can use these variables in the ivy.xml file with references like
+        ${this} in ivy.xml attribute values.
         [Before version 0.3.0 of this plugin, this property was named
         'ivyProperties'].
         Defaults to null (only Ivy's default variables, and Java system
         properties will be available in the dependency file).
 
-    boolean ivyxml.variablizeProjStrings
-        If true, then all String type properties of your Gradle Project may
-        be used like this in the ivy.xml attribute values:
-            ${gproj|propertyName}
-        Defaults to true.
+    String property projIvyVariablePrefix
+        [Before version 0.3.0 of this plugin, boolean property 
+        'variablizeProjStrings' controlled this behavior, with non-modifiable
+        prefix value of "gproj|"].
+        If non-null, then all String type properties of your Gradle Project may
+        be used with references like this in ivy.xml attribute values:
+            ${YOUR_PREFIX_VALUEpropertyName}
+        Set projIvyVariablePrefix to null to disable this feature altogether.
+        Defaults to 'gproj', so that attribute values like this will expand:
+            ${gproj|projectPropertyName}
 
 
 UTILITY METHOD

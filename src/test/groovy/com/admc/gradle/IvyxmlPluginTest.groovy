@@ -324,9 +324,39 @@ class IvyxmlPluginTest {
         assert !project.hasProperty('utest.module')
         project.setProperty('utest.orgsuffix', 'hsqldb')
         project.setProperty('utest.module', 'sqltool')
-        project.ivyxml.variablizeProjStrings = false
+        project.ivyxml.projIvyVariablePrefix = null
         IvyxmlPluginTest.load('projVariables', project.ivyxml)
         // Gradle does not support clearing of property values
         project.configurations.defaultConf.files.size()
+    }
+
+    @org.junit.Test(expected=ResolveException.class)
+    void badProjPrefixProperties() {
+        project.configurations { defaultConf }
+        assert !project.hasProperty('utest.orgsuffix')
+        assert !project.hasProperty('utest.module')
+        project.setProperty('utest.orgsuffix', 'hsqldb')
+        project.setProperty('utest.module', 'sqltool')
+        project.ivyxml.projIvyVariablePrefix = 'bad.'
+        IvyxmlPluginTest.load('projVariables', project.ivyxml)
+        // Gradle does not support clearing of property values
+        project.configurations.defaultConf.files.size()
+    }
+
+    @org.junit.Test
+    void projPrefixProperties() {
+        project.configurations { defaultConf }
+        assert !project.hasProperty('utest.orgsuffix')
+        assert !project.hasProperty('utest.module')
+        project.setProperty('utest.orgsuffix', 'hsqldb')
+        project.setProperty('utest.module', 'sqltool')
+        project.ivyxml.projIvyVariablePrefix = 'explicitPref.'
+        IvyxmlPluginTest.load('projPrefixVariables', project.ivyxml)
+        // Gradle does not support clearing of property values
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertTrue(
+                project.configurations.defaultConf.files.asList().first().name
+                .startsWith('sqltool-'))
     }
 }
