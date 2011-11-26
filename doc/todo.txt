@@ -5,18 +5,8 @@ Change variablizeProjStrings setting to projIvyVariablePrefix.
 
 Add setting to auto-add all confs.
 
-Fix exclude specifications.
+Fix exclude specifications.  First have to find out how to get the Ivy side
+specifications for it, and I am not finding this in the Ivy API.
     Don't know if Gradle dependency-specific ones support narrowing to a conf.
-    'dependencies' level Ivy ones shoudl default to configuraitons.all*, and
+    'dependencies' level Ivy ones should default to configuraitons.all*, and
      can definitely narrow to confs.
-
-Needed test cases:
-    dependency attributes
-        branch, force (unsupported AFAIK no branch support in Gradle)
-    Exclude for every supported attribute, both depencies child and dep child.
-     Ivy supports org, module, artifact, type, ext, matcher, conf
-       conf equivalent to nested <conf name="x"/> elements.
-     Gradle map not explicit, but I guess group, name, version,
-      definitely 'module', configuration?, artifact?
-
-Can Gradle take a list of exclude confs... I doubt it.

@@ -39,6 +39,17 @@ class IvyxmlPluginTest {
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
+    @org.junit.Test
+    void classifier() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('classifier', project.ivyxml)
+        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertEquals('sqltool-2.2.6-jdk5.jar',
+                project.configurations.defaultConf.files.asList().first().name)
+    }
+
     @org.junit.Test(expected=Exception.class)
     /**
      * Ivy itself requires the 'info' element, though with current version of
@@ -75,16 +86,55 @@ class IvyxmlPluginTest {
     }
     */
 
-    /**
-     * To be supported ASAP.  But until then...
-     */
-    @org.junit.Test(expected=GradleException.class)
-    void dependencyExclude() {
+    @org.junit.Test
+    void dependencyExcludeNegOrg() {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
-        IvyxmlPluginTest.load('dependencyExclude', project.ivyxml)
+        IvyxmlPluginTest.load('dependencyExcludeNegOrg', project.ivyxml)
         IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void dependencyExcludeNegMod() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('dependencyExcludeNegMod', project.ivyxml)
+        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void dependencyExcludeNegAll() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('dependencyExcludeNegAll', project.ivyxml)
+        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void dependencyExcludePosAll() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('dependencyExcludePosAll', project.ivyxml)
+        assertEquals(0, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void dependencyExcludePosOrg() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('dependencyExcludePosOrg', project.ivyxml)
+        assertEquals(0, project.configurations.defaultConf.files.size())
+    }
+
+    @org.junit.Test
+    void dependencyExcludePosMod() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        IvyxmlPluginTest.load('dependencyExcludePosMod', project.ivyxml)
+        assertEquals(0, project.configurations.defaultConf.files.size())
     }
 
     /**

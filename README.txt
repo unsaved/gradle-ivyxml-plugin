@@ -30,9 +30,12 @@ UNSUPPORTED ivy.xml features
     The following elements and attribute are purposefully prohibited.  We don't
     support them, it would be misleading to silently ignore then, and we can
     detect their usage.
-        <dependencies><dependency><exclude>  TO BE SUPPORTED SOON!
+        <dependencies><dependency><exclude artifact="..." type="..."
+            ext="..." matcher="..." cont="..."
+            (i.e. only 'org' and 'module' attrs are supported).
         <dependencies><override>
         <dependencies><dependency branch="..." force="..."  attrs.
+         (Branch and force have no support in Gradle).
         
     These elements and attributes are purposefully ignored, because the user may
     want to profitably process the same "ivy.xml" file with another tool the can

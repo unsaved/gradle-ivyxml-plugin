@@ -114,11 +114,13 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 }
             for (mappableConfName in mappableConfNames) {
                 if (!mappableConfName) return
+                /*
                 if (descriptor.canExclude())
-                    // This catches <dependency><exclude>, but not
-                    // <dependencies><exclude>.
+                N.b. this catches the case we don't want to catch,
+                <dependency><exclude>, instead of <dependencies><exclude>.
                     throw new GradleException(
                     '''Plugin does not yet support dependency 'exclude'.''')
+                */
                 if (descriptor.allIncludeRules.size() != 0)
                     throw new GradleException(
                     '''Plugin does not yet support dependency 'include'.''')
@@ -156,19 +158,31 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                         // or depArt.getAttributes().
                         dep.addArtifact(new DefaultDependencyArtifact(
                           // TODO:  Try to set classifier here.
-                          // the param of this constructor is for classifier.
-                                depArt.name, depArt.type, depArt.ext, null, depArt.url))
+                          // param 4 of this constructor is for classifier.
+                                depArt.name, depArt.type,
+                                depArt.ext, null, depArt.url))
                 }
 
                 def excRuleContainer = dep.excludeRules
                 descriptor.excludeRules?.values().each {
                     def ruleList -> ruleList.each {
-                        throw new GradleException(
-                                'Excludes not supported by plugin yet')
-                        // Following statement is totally broken.
-                        // Ivy and Gradle use different names for these
-                        // attributes, so you can't just share an att. map.
-                        excRuleContainer.add(new DefaultExcludeRule(it.attributes))
+System.err.println('Ivy attrs = ' + it.attributes)
+                        def excludeAttrs = [:]
+                        it.attributes.each { k, v ->
+                            if (k == 'matcher') {
+                                if (v == 'exact') return
+                            } else if (v == '*') {
+                                return
+                            }
+                            if (k == 'organisation') excludeAttrs['group'] = v
+                            else if (k == 'module') excludeAttrs['module'] = v
+                            else throw new GradleException(
+                                    '''Dependency 'exclude ' does not '''
+                                    + "support Ivy attribute '$k'")
+                        }
+                        assert excludeAttrs.size() > 0
+                        excRuleContainer.add(
+                                new DefaultExcludeRule(excludeAttrs))
                     }
                 }
                 gradleProjConfMap[mappableConfName].getDependencies().add(dep)
