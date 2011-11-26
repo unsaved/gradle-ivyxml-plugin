@@ -16,6 +16,9 @@ class GradleUtil {
      *
      * @throws GradleException containing list of non-satisfied dependencies
      */
+    static final private Pattern variableVersionPattern =
+            Pattern.compile('.*[^-\\w.].*')
+
     static void verifyResolve(config) {
         Set<String> artifactSet = [] as Set
         String classifierStr
@@ -46,8 +49,11 @@ class GradleUtil {
         } }
         config.allDependencies.findAll { it.artifacts.size() == 0 }.each {
             ModuleDependency dep ->
+            String depString = (dep.version.indexOf('SNAPSHOT') > -1
+                    || GradleUtil.variableVersionPattern.matcher(dep.version)
+                    .matches()) ? '' : dep.version
             Pattern pat = Pattern.compile(
-                    dep.name + '-' + dep.version + '[.-].+')
+                    '\\Q' + dep.name + '-' + depString + '\\E' + '[.-].+')
             satisfied = false
             for (File f in config.files) {
                 if (pat.matcher(f.name).matches()) {
