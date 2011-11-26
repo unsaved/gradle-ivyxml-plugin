@@ -25,6 +25,13 @@ Advanced features
 
 Recent functional changes.  New users can skip this section.
 
+    With release 1.0-milestone-6, excludes stopped having an effect.
+    I believe that this is a bug with Gradle and will open a Gradle Issue once
+    I confirm.  Until this is resolved, be aware of using 
+        <dependencies><dependency><exclude>
+    elements.  3 unit tests of this plugin project will continue to fail until
+    this is resolved.
+
     The following behaviors changed after v. 0.2.1.
         ~ Support for Java system property "ivy.dep.file".  Search for
           "system property" below for details.
