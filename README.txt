@@ -23,7 +23,16 @@ Advanced features
     User-configurable ivy dep file (a real File instance).
     User-configurable additional Ivy variables.
 
+Recent functional changes.  New users can skip this section.
+
+    The following behaviors changed after v. 0.2.1.
+        ~ Support for Java system property "ivy.dep.file".  Search for
+          "system property" below for details.
+
 UNSUPPORTED ivy.xml features
+    Most ivy.xml elements and attributes are supported.  Here we document those
+    which are not.
+
     The following ivy.xml elements and attributes are ignored.  I did my best
     to detect and either, support, throw or warn, but the public Ivy API just
     does not allow for access to these settings.
@@ -122,7 +131,9 @@ SETTINGS
     File ivyxml.depFile
         The Ivy dependency file to load when ivyxml.load() is executed.
         Corresponds to native Ivy property 'ivy.dep.file'.
-        Defaults to file('ivy.xml').
+        After Ivyxml v. 0.2.1, if Java system property "ivy.dep.file" is set,
+        then defaults to file(...) of that value, otherwise (for all versions
+        of Ivyxml) defaults to file('ivy.xml').
 
     Map<String, String> ivyxm.ivyProperties
         You can use these variables in the ivy.xml file like ${this}.

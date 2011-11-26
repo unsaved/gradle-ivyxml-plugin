@@ -13,8 +13,9 @@ class IvyxmlPluginTest {
         URL url = Thread.currentThread().contextClassLoader.getResource(
                 baseName + '.xml')
         assert url != null:
-            """XML file not found as resource in classpath:  $baseName
-"""
+            ("""XML file not found as resource in classpath:  $baseName"""
+            + '''.xml
+''')
         File newFile = File.createTempFile('ivytest', '.xml')
         newFile.deleteOnExit()
         newFile.write(url.getText('UTF-8'), 'UTF-8')
@@ -35,7 +36,7 @@ class IvyxmlPluginTest {
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('trivial', project.ivyxml)
         //System.err.println('**' + project.configurations.defaultConf.files.join('|'))
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -44,7 +45,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('classifier', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
         assertEquals('sqltool-2.2.6-jdk5.jar',
                 project.configurations.defaultConf.files.asList().first().name)
@@ -70,7 +71,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('publications', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -91,7 +92,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegOrg', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -100,7 +101,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegMod', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -109,7 +110,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependencyExcludeNegAll', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -145,7 +146,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('include', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -157,7 +158,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('dependenciesExclude', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
      */
@@ -167,7 +168,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('override', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
 
     @org.junit.Test(expected=GradleException.class)
@@ -189,7 +190,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('artifact', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
         assertTrue(project.configurations.defaultConf.files.asList()
                 .first().name.endsWith('.pom'))
@@ -207,7 +208,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowAttr', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
     */
 
@@ -223,7 +224,7 @@ class IvyxmlPluginTest {
         Project project = IvyxmlPluginTest.prepProject()
         project.configurations { defaultConf }
         IvyxmlPluginTest.load('confNarrowEl', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
     }
      */
 
@@ -241,7 +242,7 @@ class IvyxmlPluginTest {
         project.configurations { defaultConf }
         project.ivyxml.ivyProperties = [incFilePath: incFile.absolutePath]
         IvyxmlPluginTest.load('includeFile', project.ivyxml)
-        IvyxmlPluginTest.verifyResolve(project.configurations.defaultConf)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(1, project.configurations.defaultConf.files.size())
     }
 
@@ -249,72 +250,26 @@ class IvyxmlPluginTest {
      * <dependency><conf...>
      */
 
-
-    /**
-     * Throws if any dependencies of the specified Configuration are not satisfied
-     *
-     * @throws GradleException containing list of non-satisfied dependencies
-     */
-    static void verifyResolve(config) {
-        Set<String> artifactSet = [] as Set
-        String classifierStr
-        boolean satisfied
-        List<ModuleDependency> unsatisfiedDeps = []
-        List<DependencyArtifact> unsatisfiedArts = []
-        config.allDependencies.each { it.artifacts.each {
-            // The ModuleDependencies only have artifict members if either
-            // classifier or extension/type are specified for the dependency.
-            // If neither is, then we'll check the dependency in the findAll
-            // loop below.
-            DependencyArtifact depArt ->
-            classifierStr =
-                    (depArt.classifier == null) ? '' : ('-' + depArt.classifier)
-            Pattern pat = Pattern.compile(
-                    depArt.name + '-.+' + classifierStr + '.' + depArt.extension)
-            satisfied = false
-            for (File f in config.files) {
-                if (pat.matcher(f.name).matches()) {
-                    satisfied = true
-                    break
-                }
-            }
-            if (!satisfied) {
-                unsatisfiedDeps << it
-                unsatisfiedArts << depArt
-            }
-        } }
-        config.allDependencies.findAll { it.artifacts.size() == 0 }.each {
-            ModuleDependency dep ->
-            Pattern pat = Pattern.compile(
-                    dep.name + '-' + dep.version + '[.-].+')
-            satisfied = false
-            for (File f in config.files) {
-                if (pat.matcher(f.name).matches()) {
-                    satisfied = true
-                    break
-                }
-            }
-            if (!satisfied) {
-                unsatisfiedDeps << dep
-                unsatisfiedArts << null
-            }
-        }
-        if (unsatisfiedDeps.size() == 0) return
-        StringBuilder sb = new StringBuilder()
-        DependencyArtifact depArt
-        int oneBasedInt
-        unsatisfiedDeps.eachWithIndex{ ModuleDependency dep, int i ->
-            depArt = unsatisfiedArts[i]
-            sb.append('    ').append(i + 1)
-            sb.append(": $dep.group:$dep.name:$dep.version")
-            if (depArt != null) {
-                sb.append('  ARTIFACT: ').append("$depArt.name $depArt.extension")
-                if (depArt.classifier != null)
-                    sb.append(" (classifier '$depArt.classifier')")
-            }
-            sb.append('\n')
-        }
-        throw new GradleException(
-            "Unsatisfied dependencies for configuration '$config.name':\n" + sb)
+    @org.junit.Test
+    void sysProperty() {
+        Project project = IvyxmlPluginTest.prepProject()
+        project.configurations { defaultConf }
+        URL url = Thread.currentThread().contextClassLoader.getResource(
+                'sysProperty.xml')
+        assert url != null:
+            '''XML file not found as resource in classpath:  sysProperty.xml
+'''
+        File newFile = File.createTempFile('ivytest', '.xml')
+        newFile.deleteOnExit()
+        newFile.write(url.getText('UTF-8'), 'UTF-8')
+        String origSysPropertyValue = System.properties['ivy.dep.file']
+        System.setProperty('ivy.dep.file', newFile.absolutePath)
+        project.ivyxml.load()
+        if (origSysPropertyValue == null)
+            System.clearProperty('ivy.dep.file')
+        else
+            System.setProperty('ivy.dep.file', origSysPropertyValue)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
     }
 }

@@ -17,28 +17,7 @@ import org.gradle.api.internal.artifacts.DefaultExcludeRule
 import org.gradle.api.artifacts.Configuration;
 
 /**
- * This Gradle support for 'ivy.xml' is based on contributed fragments in Jira
- * issue for GRADLE-197 at http://issues.gradle.org/browse/GRADLE-197 .
- *
- * The code here includes my own enhancements, including
- *     Code review
- *     Support for configuration inheritance via 'extends'
- *     Support for 'transitive' settings on confs and/or dependencies
- *     Support for 'classifier's specified using a .../ivy/maven' namespace
- *     Automatically set Ivy variables for every Gradle String-type property.
- *       (With keys all prefixed with 'gproj|', e.g. use ${gproj|name}).
- *     User-configurable ivy dep file (a real File instance).
- *     User-configurable additional Ivy variables.
- *
- * Set project property depFile to the Ivy dependecy file (type java.io.File)
- * you want to use a file other than "ivy.xml" in the project directory.
- * This corresponds to Ivy property 'ivy.dep.file'.
- *
- * Set project property ivyProperties to a Map<String, String>, for the
- * obvious purpose.
- *
- * Does not attempt to load any ivysettings files or do any repository setup,
- * only dependency settings.
+ * Usage documentation is in the README.txt file for this project.
  *
  * @author Blaine Simpson  (blaine dot simpson at admc dot com)
  */
@@ -60,7 +39,6 @@ class Ivyxml {
 
     Ivyxml(Project p) {
         gp = p
-        depFile = gp.file('ivy.xml')
     }
 
     void load() {
@@ -73,8 +51,12 @@ class Ivyxml {
             if (it.value instanceof String)
                 ivySettings.setVariable('gproj|' + it.key, it.value, true)
         }
-        assert depFile.isFile() && depFile.canRead():
-            """Ivy dep file inaccessible:  $depFile.absolutePath
+        File file = ((depFile == null)
+                ? gp.file((System.properties['ivy.dep.file'] == null)
+                        ? 'ivy.xml' : System.properties['ivy.dep.file'])
+                : depFile)
+        assert file.isFile() && file.canRead():
+            """Ivy dep file inaccessible:  $file.absolutePath
 Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 """
         if (ivyProperties != null) {
@@ -84,7 +66,7 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
         }
         DefaultModuleDescriptor moduleDescriptor =
                 (DefaultModuleDescriptor) XmlModuleDescriptorParser.instance
-                .parseDescriptor(ivySettings, depFile.toURL(), false)
+                .parseDescriptor(ivySettings, file.toURL(), false)
         if (moduleDescriptor.allDependencyDescriptorMediators.any {
             it.allRules.values().any {
                 it instanceof OverrideDependencyDescriptorMediator
