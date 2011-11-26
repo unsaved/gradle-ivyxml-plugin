@@ -30,6 +30,9 @@ Recent functional changes.
         <dependencies><dependency><exclude>
     elements.  3 unit tests of this plugin project will continue to fail until
     this is resolved.
+    It is very possible that this is fixed in Gradle before you use this plugin.
+    To find out, you can ask me, or you can pull the source code for this
+    project and run the Gradle task 'test'.
 
     New users can safely skip the remainder of this section.
 
