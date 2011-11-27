@@ -48,7 +48,7 @@ class Ivyxml {
 
         IvySettings ivySettings = new IvySettings();
         ivySettings.defaultInit();
-        if (projIvyVariablePrefix != null) gp.project.properties.each {
+        if (projIvyVariablePrefix != null) gp.properties.each {
             if (it.value instanceof String)
                 ivySettings.setVariable(
                         projIvyVariablePrefix + it.key, it.value, true)
