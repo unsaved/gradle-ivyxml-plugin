@@ -8,15 +8,15 @@ GOTCHA TIPS:
     * If you upgrade gradle to milestone-6, completely wipe out your Gradle
       cache at $HOME/.gradle.  Nasty, confusing problems may result if you do
       not.  This has nothing to do with Ivyxml, but with Gradle caching.
-    * With Gradle milestone-6, you will get warnings when you run
-      ivyxml.load(), like this:
+    * With Gradle milestone-6, you will get warnings If you run ivyxml.load()
+      after you apply Gradle's maven plugin.  The warnings look like this:
         The MavenPluginConvention.getPomDirName() method is deprecated...
       and
         The MavenPluginConvention.getPomDir() method is deprecated...
       Ignore these messages, because the message text is wrong, and Ivyxml is
-      doing nothing wrong.  Once I get confirmation on the Gradle forum, I will
-      register a Gradle issue bug.
-        http://forums.gradle.org/gradle/topics/how_do_i_satisfy_new_milestone_6_warnings_elicited_by_the_maven_plugin
+      doing nothing wrong.
+      I have registered issue GRADLE-1967:
+          http://issues.gradle.org/browse/GRADLE-1967
 
 
 This plugin loads dependency definitions from an Ivy dependency file
