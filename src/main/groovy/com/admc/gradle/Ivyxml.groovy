@@ -124,18 +124,12 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 if (id.branch != null)
                     throw new GradleException(
                             '''Gradle does not support Ivy 'branches'.''')
-                def depAttrs = [
+                DefaultExternalModuleDependency dep
+                gp.dependencies { dep = add(mappableConfName, [
                     group: id.organisation,
                     name: id.name,
                     version: id.revision
-                ]
-                if (mavenNsPrefix != null
-                        && descriptor.qualifiedExtraAttributes.containsKey(
-                        mavenNsPrefix + ':classifier'))
-                    depAttrs['classifier'] = descriptor.qualifiedExtraAttributes[
-                            mavenNsPrefix + ':classifier']
-                DefaultExternalModuleDependency dep
-                gp.dependencies { dep = add(mappableConfName, depAttrs) }
+                ]) }
                 dep.changing = descriptor.changing
                 dep.transitive = descriptor.transitive
 
@@ -150,11 +144,16 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                         // depArt.getAttribute('conf')
                         // or depArt.getAttributes().
                         dep.addArtifact(new DefaultDependencyArtifact(
-                          // TODO:  Try to set classifier here.
-                          // param 4 of this constructor is for classifier.
                                 depArt.name, depArt.type,
+                                depArt.ext, null,
+                                (mavenNsPrefix != null
+                                        && descriptor.qualifiedExtraAttributes
+                                        .containsKey(mavenNsPrefix
+                                        + ':classifier'))
+                                        ? descriptor.qualifiedExtraAttributes[
+                                        mavenNsPrefix + ':classifier']
+                                        : null
                                 depArt.ext, null, depArt.url))
-                }
 
                 def excRuleContainer = dep.excludeRules
                 descriptor.excludeRules?.values().each {
