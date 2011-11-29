@@ -1,0 +1,12 @@
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+  <info organisation="admc.com" module="unittest"/>
+  <configurations defaultconf="defaultConf">
+    <conf name="defaultConf" description="Trivially simple conf"
+          transitive="false"/>
+  </configurations>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="org.hsqldb" name="sqltool" rev="2.2.6">
+      <artifact name="sqltool" type="jar" m:classifier="jdk5"/>
+    </dependency>
+  </dependencies>
+</ivy-module>

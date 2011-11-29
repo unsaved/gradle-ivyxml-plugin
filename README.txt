@@ -252,3 +252,8 @@ CLASSIFIERS
     <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
     ...
     <dependency org="org.hsqldb" name="hsqldb" rev="[2,)" m:classifier="jdk5"/>
+
+    You can't use the classifier attribute on artifact elements, because the
+    current version of the Ivy API seems to be broken there.
+    (Specifically, the 'classifier' parameter for the
+    DependencyArtifactDescriptor class has no effect).

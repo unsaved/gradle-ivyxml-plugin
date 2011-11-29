@@ -141,6 +141,12 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 
                 descriptor.allDependencyArtifacts.each {
                     DependencyArtifactDescriptor depArt ->
+                        if (depArt.getExtraAttribute('classifier'))
+                            throw new GradleException(
+                                'Ivyxml plugin does not support classifier '
+                                + 'attribute for artifact element, because '
+                                + 'this setting is not working with the '
+                                + 'current version of the Ivy API.')
                        // depArt.configurations will always be populated here,
                        // even if no conf attribute or element inside of
                        // <dependencies>.
@@ -150,8 +156,10 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                         // depArt.getAttribute('conf')
                         // or depArt.getAttributes().
                         dep.addArtifact(new DefaultDependencyArtifact(
-                          // TODO:  Try to set classifier here.
-                          // param 4 of this constructor is for classifier.
+                          // Parameter #4 is supposed to be for a classifier,
+                          // but it does not work.
+                          // Because of this, we apply classifier values above
+                          // in the
                                 depArt.name, depArt.type,
                                 depArt.ext, null, depArt.url))
                 }

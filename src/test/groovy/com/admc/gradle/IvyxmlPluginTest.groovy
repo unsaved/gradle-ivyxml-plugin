@@ -48,6 +48,15 @@ class IvyxmlPluginTest {
                 project.configurations.defaultConf.files.asList().first().name)
     }
 
+    @org.junit.Test(expected=GradleException.class)
+    void classifierArtifact() {
+        IvyxmlPluginTest.load('classifierArtifact', project.ivyxml)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(1, project.configurations.defaultConf.files.size())
+        assertEquals('sqltool-2.2.6-jdk5.jar',
+                project.configurations.defaultConf.files.asList().first().name)
+    }
+
     @org.junit.Test(expected=Exception.class)
     /**
      * Ivy itself requires the 'info' element, though with current version of
