@@ -1,23 +1,9 @@
 Ivyxml Gradle Plugin
 
 
-GOTCHA TIPS:
-
-    * Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
-      (This is due to compatibility-killing Groovy upgrade in Gradle).
-    * If you upgrade gradle to milestone-6, completely wipe out your Gradle
-      cache at $HOME/.gradle.  Nasty, confusing problems may result if you do
-      not.  This has nothing to do with Ivyxml, but with Gradle caching.
-    * With Gradle milestone-6, you will get warnings If you run ivyxml.load()
-      after you apply Gradle's maven plugin.  The warnings look like this:
-        The MavenPluginConvention.getPomDirName() method is deprecated...
-      and
-        The MavenPluginConvention.getPomDir() method is deprecated...
-      Ignore these messages, because the message text is wrong, and Ivyxml is
-      doing nothing wrong.
-      I have registered issue GRADLE-1967:
-          http://issues.gradle.org/browse/GRADLE-1967
-
+Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
+IMPORTANT:  User who are upgrading Gradle or upgrading Ivyxml should read
+the file "upgrade.txt" in the "doc" subdirectory.
 
 This plugin loads dependency definitions from an Ivy dependency file
 (aka "ivy.xml") into Gradle.
@@ -47,41 +33,19 @@ Advanced features
     User-configurable whether to ignore non-instantiated confs or to
      auto-instantiate Gradle Configurations.
 
-Recent functional changes.
-    With release 1.0-milestone-6, <dependency><exclude>s stopped having an
-    effect.
-    I don't yet know if this is a problem with Gradle or with this plugin, but
-    I have already expended more time on it than is justified for a feature
-    that I am not using now.
-    Until this is resolved, be aware of using 
-        <dependencies><dependency><exclude>
-    elements.  3 unit tests of this plugin project will continue to fail until
-    this is resolved.
-    It is very possible that this may be fixed in Gradle before you use this
-    plugin.
-    To find out, you can ask me, or you can pull the source code for this
-    project and run the Gradle task 'test'.
-    I will fix this when somebody lends a hand, or when I need this feature
-    (like to narrow transitive dependencies).
+! With Gradle milestone-6, you will get warnings If you run ivyxml.load()
+! after you apply Gradle's maven plugin.  The warnings look like this:
+!   The MavenPluginConvention.getPomDirName() method is deprecated...
+! and
+!   The MavenPluginConvention.getPomDir() method is deprecated...
+! Ignore these messages, because the message text is wrong, and Ivyxml is
+! doing nothing wrong.
+! I have registered issue GRADLE-1967:
+!     http://issues.gradle.org/browse/GRADLE-1967
 
-    New users can safely skip the remainder of this section.
-
-    The following behaviors changed after v. 0.2.1.
-        ~ Support for Java system property "ivy.dep.file".  Search for
-          "system property" below for details.
-        ~ Plugin property name 'ivyProperties' changed to 'ivyVariables'
-        ~ Plugin boolean property 'variablizeProjStrings' replaced with
-          String property projIvyVariablePrefix.
-          Search for "projIvyVariablePrefix" below for details.
-        ~ By default every configuration referenced in the ivy.xml file is
-          automatically instantiated if it does not already exist.
-          Default usage much simplified since the user doesn't have to do any
-          Configuration setup ahead-of-time.  This behavior can be toggled with
-          new boolean property 'instantiateConfigurations'.
-          See fine points in the SETTINGS section below if you will be setting
-          'instantiateConfigurations' to false.
 
 UNSUPPORTED ivy.xml features
+
     Most ivy.xml elements and attributes are supported.  Here we document those
     which are not.
 
