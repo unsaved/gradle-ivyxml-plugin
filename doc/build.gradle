@@ -1,0 +1,47 @@
+/**
+ * Demonstrates usage of the Ivyxml Gradle Plugin
+ *
+ * See the Ivyxml README.txt file at
+ * https://github.com/unsaved/gradle-ivyxml-plugin/raw/master/README.txt
+ * for a list and explanation of all provided methods and settings for the
+ * plugin.
+ *
+ * If you have the full project code (like from a source zip or a Git checkout)
+ * you can execute this file by running "../gradlew" (..\gradlew from Windows)
+ * from this directory.
+ */
+
+defaultTasks 'resolveAndDisplayDepPaths'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath 'com.admc:gradle-ivyxml-plugin:latest.milestone'
+    }
+}
+apply plugin: 'java'
+apply plugin: 'ivyxml'
+
+repositories { mavenCentral() }
+
+configurations {
+    custom  // Would usually do some meaningful config. of the Conf somewhere
+}
+
+task resolveAndDisplayDepPaths << {
+    ivyxml.load()
+
+    // The Configuration.getAsPath() methods called below (and many other
+    // actions) elicit an Ivy resolve and download (unless artifacts already
+    // present).
+
+    println '''Configuration 'runtime' was added by 'java' plugin:
+    ''' + configurations.runtime.asPath
+    // For variety, we'll reference the next Configuration with [key] syntax:
+    println '''Configuration 'custom' was added in Gradle file:
+    ''' + configurations['custom'].asPath
+    println '''Configuration 'byIvy' was added by definitions in 'ivy.xml' file:
+    ''' + configurations.byIvy.asPath
+}
+resolveAndDisplayDepPaths.description =
+    '''Resolve a few selected confs and display 'paths' generated from them.'''

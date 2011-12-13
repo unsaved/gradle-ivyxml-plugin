@@ -1,0 +1,20 @@
+<ivy-module version="2.0">
+  <!-- Sample 'ivy.xml' file for Ivyxml Plugin -->
+
+  <info organisation="admc.com" module="sample"/>
+  <configurations defaultconf="compile">
+    <!-- The Gradle Java plugin makes a 'compile' Configuration and a 'runtime'
+         configuration, and the 'runtime' one will always inherit from the
+         'compile' one. -->
+    <conf name="compile" description="Dependencies for compiling"
+          transitive="false"/>
+    <conf name="byIvy" description="A play conf" transitive="false"/>
+    <conf name="custom" description="An extending conf" transitive="false"
+          extends="byIvy"/>
+  </configurations>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="commons-logging" name="commons-logging" rev="1.1.1"/>
+    <dependency org="commons-io" name="commons-io" rev="2.1" conf="byIvy"/>
+    <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="custom"/>
+  </dependencies>
+</ivy-module>
