@@ -2,7 +2,7 @@ Ivyxml Gradle Plugin
 
 
 Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
-IMPORTANT:  User who are upgrading Gradle or upgrading Ivyxml should read
+IMPORTANT:  Users who are upgrading Gradle or upgrading Ivyxml should read
 the file "upgrade.txt" in the "doc" subdirectory.
 
 This plugin loads dependency definitions from an Ivy dependency file
