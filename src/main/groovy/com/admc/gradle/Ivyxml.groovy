@@ -42,6 +42,19 @@ class Ivyxml {
         gp = p
     }
 
+    void excludeModule(module) {
+        gp.configurations.all*.exclude group: module.organisation, module: module.name
+    }
+    
+    void handleExcludeRules(excludeRules) {
+        // it's not obvious from the code if the excludeRules array can ever be null
+        if(excludeRules == null) { return }
+        
+        excludeRules.each { rule ->
+            excludeModule rule.id.mid
+        }
+    }
+    
     void load() {
         def gradleProjConfMap =
                 gp.configurations.collectEntries { [(it.name): it] }
@@ -100,6 +113,11 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
             if (gradleConfig.description == null)
                 gradleConfig.description = c.description
         }
+        
+        if(moduleDescriptor.canExclude()) {
+            handleExcludeRules(moduleDescriptor.allExcludeRules)
+        }
+        
         moduleDescriptor.dependencies.each {
             DependencyDescriptor descriptor ->
                 def mappableConfNames = descriptor.moduleConfigurations.findAll {
