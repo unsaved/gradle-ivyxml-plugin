@@ -40,5 +40,5 @@ Recent functional changes.
           Default usage much simplified since the user doesn't have to do any
           Configuration setup ahead-of-time.  This behavior can be toggled with
           new boolean property 'instantiateConfigurations'.
-          See fine points in the SETTINGS section below if you will be setting
-          'instantiateConfigurations' to false.
+          See fine points in the SETTINGS section of README.txt if you will be
+          setting 'instantiateConfigurations' to false.
