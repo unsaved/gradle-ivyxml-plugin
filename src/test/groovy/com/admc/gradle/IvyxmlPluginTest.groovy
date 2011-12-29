@@ -398,8 +398,7 @@ class IvyxmlPluginTest {
     }
     
     @org.junit.Test
-    //void 'two global excludes in the ivy.xml are added to gradle configuration'() {
-    void test1() {
+    void two_global_excludes_in_the_ivy_xml_are_added_to_gradle_configuration() {
         project.configurations { excluded }
         
         IvyxmlPluginTest.load('two_global_exclusions', project.ivyxml)
@@ -410,8 +409,7 @@ class IvyxmlPluginTest {
     }
     
     @org.junit.Test
-    //void 'ivy.xml containing zero global excludes adds zero excludes to gradle configuration'() {
-    void test2() {
+    void ivy_xml_containing_zero_global_excludes_adds_zero_excludes_to_gradle_configuration() {
         project.configurations { excluded }
         
         IvyxmlPluginTest.load('zero_global_exclusions', project.ivyxml)
