@@ -424,4 +424,12 @@ class IvyxmlPluginTest {
         
         assertThat excludeRules, hasSize(0)
     }
+
+    @org.junit.Test
+    void dependencyExcludeTransitive() {
+        IvyxmlPluginTest.load('dependencyExcludeTransitive', project.ivyxml)
+        GradleUtil.verifyResolve(project.configurations.defaultConf)
+        assertEquals(['guice-multibindings-3.0.jar', 'json-0.51.jar'] as Set,
+            project.configurations.defaultConf.files.collect { it.name } as Set)
+    }
 }
