@@ -1,0 +1,14 @@
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+       xmlns:m="http://ant.apache.org/ivy/maven">
+  <info organisation="admc.com" module="unittest"/>
+  <configurations defaultconf="defaultConf">
+    <conf name="defaultConf"/>
+  </configurations>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="com.proofpoint.platform" name="json" rev="0.51">
+      <exclude org="com.google.guava" />
+      <exclude org="com.google.inject" />
+      <exclude module="jackson-mapper-asl" />
+    </dependency>
+  </dependencies>
+</ivy-module>
