@@ -56,7 +56,6 @@ UNSUPPORTED ivy.xml features
     to detect and either, support, throw or warn, but the public Ivy API just
     does not allow for access to these settings.
         <conflicts> (and all attrs and sub-elements)
-        <dependencies><exclude> 
         <dependencies><dependency><conf>  (For conf-mapping)
         <dependencies><dependency><artifact conf="...">  attr.
         <dependencies><dependency><*><conf>
@@ -70,6 +69,13 @@ UNSUPPORTED ivy.xml features
         <dependencies><override>
         <dependencies><dependency branch="..." force="..."  attrs.
          (Branch and force have no support in Gradle).
+    
+    As of Gradle 1.0-milestone-6, there is this difference in behavior between
+        <dependencies><dependency><exclude...
+    in native Ivy and this plugin.  With native Ivy, the exclusion applies to
+    the parent dependency item in addition to transitive dependencies of it.
+    With Ivyxml, the exclusion applies to the transitive dependencies but not
+    to the parent dependency item.
         
     These elements and attributes are purposefully ignored, because the user may
     want to profitably process the same "ivy.xml" file with another tool the can

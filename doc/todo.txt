@@ -1,5 +1,3 @@
-Fix <dependencies><exclude> specifications.  First have to find out how to get
-the Ivy side specifications for it, and I am not finding this in the Ivy API.
-    Don't know if Gradle dependency-specific ones support narrowing to a conf.
-    'dependencies' level Ivy ones should default to configuraitons.all*, and
-    can definitely narrow to confs.
+Write real functional tests for the higher-level exclude element.  The current
+tests (contributions) test only if the exclusions load, not if they actually
+perform their intended function.
