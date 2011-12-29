@@ -1,5 +1,9 @@
 package com.admc.gradle
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize
+
 import org.gradle.api.Project
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ResolveException
@@ -391,5 +395,27 @@ class IvyxmlPluginTest {
         GradleUtil.verifyResolve(project.configurations.b2)
         assertEquals(1, project.configurations.b.files.size())
         assertEquals(2, project.configurations.b2.files.size())
+    }
+    
+    @org.junit.Test
+    void two_global_excludes_in_the_ivy_xml_are_added_to_gradle_configuration() {
+        project.configurations { excluded }
+        
+        IvyxmlPluginTest.load('two_global_exclusions', project.ivyxml)
+        
+        def excludeRules = project.configurations.excluded.excludeRules
+        
+        assertThat excludeRules, hasSize(2)
+    }
+    
+    @org.junit.Test
+    void ivy_xml_containing_zero_global_excludes_adds_zero_excludes_to_gradle_configuration() {
+        project.configurations { excluded }
+        
+        IvyxmlPluginTest.load('zero_global_exclusions', project.ivyxml)
+        
+        def excludeRules = project.configurations.excluded.excludeRules
+        
+        assertThat excludeRules, hasSize(0)
     }
 }
