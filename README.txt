@@ -72,10 +72,20 @@ UNSUPPORTED ivy.xml features
     
     As of Gradle 1.0-milestone-6, there is this difference in behavior between
         <dependencies><dependency><exclude...
-    in native Ivy and this plugin.  With native Ivy, the exclusion applies to
-    the parent dependency item in addition to transitive dependencies of it.
+    in native Ivy and this plugin, for non-transitive dependencies.  With
+    native Ivy, the exclusion applies to the parent dependency item in addition
+    to transitive dependencies of it.
     With Ivyxml, the exclusion applies to the transitive dependencies but not
     to the parent dependency item.
+    
+    As of Gradle 1.0-milestone-6, there is this difference in behavior between
+        <dependencies><exclude...
+    in native Ivy and this plugin, for non-transitive dependencies.  With
+    native Ivy, if an <exclude> at this level excludes a peer-level
+    dependency element, the behavior is crazy with some but not all
+    dependencies excluded.
+    With Ivyxml, the exclusion applies consistently to peer-level dependencies
+    as well as to transitive dependencies.
         
     These elements and attributes are purposefully ignored, because the user may
     want to profitably process the same "ivy.xml" file with another tool the can

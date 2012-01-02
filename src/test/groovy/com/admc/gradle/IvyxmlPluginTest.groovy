@@ -1,14 +1,14 @@
 package com.admc.gradle
 
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize
+//import static org.hamcrest.MatcherAssert.assertThat
+//import static org.hamcrest.Matchers.is
+//import static org.hamcrest.collection.IsCollectionWithSize.hasSize
+import static org.junit.Assert.*
 
 import org.gradle.api.Project
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.ResolveException
 import org.gradle.testfixtures.ProjectBuilder
-import static org.junit.Assert.*
 import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.DependencyArtifact
 import java.util.regex.Pattern
@@ -403,27 +403,8 @@ class IvyxmlPluginTest {
         assertEquals(2, project.configurations.b2.files.size())
     }
     
-    @org.junit.Test
-    void two_global_excludes_in_the_ivy_xml_are_added_to_gradle_configuration() {
-        project.configurations { excluded }
-        
-        IvyxmlPluginTest.load('two_global_exclusions', project.ivyxml)
-        
-        def excludeRules = project.configurations.excluded.excludeRules
-        
-        assertThat excludeRules, hasSize(2)
-    }
-    
-    @org.junit.Test
-    void ivy_xml_containing_zero_global_excludes_adds_zero_excludes_to_gradle_configuration() {
-        project.configurations { excluded }
-        
-        IvyxmlPluginTest.load('zero_global_exclusions', project.ivyxml)
-        
-        def excludeRules = project.configurations.excluded.excludeRules
-        
-        assertThat excludeRules, hasSize(0)
-    }
+    // TODO: Consider using hamcrest tests like...
+    // assertThat excludeRules, hasSize(0)
 
     @org.junit.Test
     void dependencyExcludeTransitive() {
@@ -431,5 +412,18 @@ class IvyxmlPluginTest {
         GradleUtil.verifyResolve(project.configurations.defaultConf)
         assertEquals(['guice-multibindings-3.0.jar', 'json-0.51.jar'] as Set,
             project.configurations.defaultConf.files.collect { it.name } as Set)
+    }
+
+    @org.junit.Test
+    void globalExcludes() {
+        IvyxmlPluginTest.load('globalExcludes', project.ivyxml)
+        assertEquals(['guice-multibindings-3.0.jar', 'json-0.51.jar'] as Set,
+            project.configurations.defaultConf.files.collect { it.name } as Set)
+    }
+
+    @org.junit.Test
+    void globalExcludeAll() {
+        IvyxmlPluginTest.load('globalExcludeAll', project.ivyxml)
+        assertEquals(0, project.configurations.defaultConf.files.size())
     }
 }

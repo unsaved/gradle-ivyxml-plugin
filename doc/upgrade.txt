@@ -12,7 +12,8 @@ GOTCHA TIPS:
 
 Recent functional changes.
 
-    See item about <dependency><exclude> under "UNSUPPORTED" in README.txt.
+    See item abouts <dependency><exclude> and <dependency><dependency><exclude>
+    under "UNSUPPORTED" in README.txt.
 
     With version 0.3.1 added support for <dependencies><exclude> elements.
     Thanks for Steven Dick for the contribution.
