@@ -16,7 +16,7 @@ defaultTasks 'resolveAndDisplayDepPaths'
 buildscript {
     repositories { mavenCentral() }
     dependencies {
-        classpath 'com.admc:gradle-ivyxml-plugin:latest.milestone'
+        classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
     }
 }
 apply plugin: 'java'

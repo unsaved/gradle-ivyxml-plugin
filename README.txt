@@ -107,7 +107,7 @@ Pull plugin from Internet.
         buildscript {
             mavenCentral()
             dependencies {
-                classpath 'com.admc:gradle-ivyxml-plugin:latest.milestone'
+                classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
             }
         }
         apply plugin: 'ivyxml'
@@ -209,7 +209,7 @@ UTILITY METHOD
     buildscript {
         repositories { mavenCentral() }
         dependencies {
-            classpath 'com.admc:gradle-ivyxml-plugin:latest.milestone'
+            classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
         }
     }
 
