@@ -1,53 +1,59 @@
-Ivyxml Gradle Plugin
+= Ivyxml Gradle Plugin
 
 
 Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
-IMPORTANT:  Users who are upgrading Gradle or upgrading Ivyxml should read
-the file "upgrade.txt" in the "doc" subdirectory.
+**IMPORTANT:**  Users who are upgrading Gradle or upgrading Ivyxml should read
+the file ##upgrade.txt## in the ##doc## subdirectory.
 
 This plugin loads dependency definitions from an Ivy dependency file
-(aka "ivy.xml") into Gradle.
+(aka ##ivy.xml##) into Gradle.
 
 Purposefully does not do anything with any ivysettings.xml file.  Purposefully
 ignores publishing-related ivy.xml elements and attributes.
 
-The 'doc' subdirectory contains an example.  Take a look at the "build.gradle"
-and "ivy.xml" files there, and run gradle from that directory.
+The ##doc## subdirectory contains an example.  Take a look at the ##build.gradle##
+and ##ivy.xml## files there, and run gradle from that directory.
 
 This work was motivated by discussion for issue GRADLE-197 at
 http://issues.gradle.org/browse/GRADLE-197, and started with code snippets
 from there.  I have added much more complete support since then.
 
 This plugin also bundles the Gradle utility method
+<<prettyPrint>> {{{
     public void com.admc.gradle.VerifyResolve(Configuration)
+}}}
 This is a work-around for problems where Gradle silently fails to satisfy some
 dependencies.
 
 
-Advanced features
+== Advanced features
 
-    Support for configuration inheritance via 'extends'
-    Support for 'transitive' settings on confs and/or dependencies
-    Support for 'classifier's specified using a .../ivy/maven' namespace
-    Automatically set Ivy variables for every Gradle String-type property.
-      (Default key prefix is 'gproj|', so reference with ${gproj|name}).
-    User-configurable ivy dep file (a real File instance).
-    User-configurable additional Ivy variables.
-    User-configurable whether to ignore non-instantiated confs or to
+*   Support for configuration inheritance via ##extends##
+*   Support for ##transitive## settings on confs and/or dependencies
+*   Support for //classifiers// specified using a ##.../ivy/maven## namespace
+*   Automatically set Ivy variables for every Gradle String-type property.
+      (Default key prefix is ##gproj|##, so reference with ##${gproj|name}##).
+*   User-configurable ivy dep file (a real File instance).
+*   User-configurable additional Ivy variables.
+*   User-configurable whether to ignore non-instantiated confs or to
      auto-instantiate Gradle Configurations.
 
-! With Gradle milestone-6, you will get warnings If you run ivyxml.load()
-! after you apply Gradle's maven plugin.  The warnings look like this:
-!   The MavenPluginConvention.getPomDirName() method is deprecated...
-! and
-!   The MavenPluginConvention.getPomDir() method is deprecated...
-! Ignore these messages, because the message text is wrong, and Ivyxml is
-! doing nothing wrong.
-! I have registered issue GRADLE-1967:
-!     http://issues.gradle.org/browse/GRADLE-1967
+**With Gradle milestone-6, you will get warnings If you run ivyxml.load()
+  after you apply Gradle's maven plugin.  The warnings look like this:
+{{{
+    The MavenPluginConvention.getPomDirName() method is deprecated...
+}}}
+** and
+{{{
+    The MavenPluginConvention.getPomDir() method is deprecated...
+}}}
+** Ignore these messages, because the message text is wrong, and Ivyxml is
+** doing nothing wrong.
+** I have registered issue GRADLE-1967:
+**     http://issues.gradle.org/browse/GRADLE-1967
 
 
-UNSUPPORTED ivy.xml features
+== UNSUPPORTED ivy.xml features
 
     Most ivy.xml elements and attributes are supported.  Here we document those
     which are not.
@@ -55,23 +61,29 @@ UNSUPPORTED ivy.xml features
     The following ivy.xml elements and attributes are ignored.  I did my best
     to detect and either, support, throw or warn, but the public Ivy API just
     does not allow for access to these settings.
+{{{
         <conflicts> (and all attrs and sub-elements)
         <dependencies><dependency><conf>  (For conf-mapping)
         <dependencies><dependency><artifact conf="...">  attr.
         <dependencies><dependency><*><conf>
+}}}
 
     The following elements and attribute are purposefully prohibited.  We don't
     support them, it would be misleading to silently ignore then, and we can
     detect their usage.
+{{{
         <dependencies><dependency><exclude artifact="..." type="..."
             ext="..." matcher="..." cont="..."
             (i.e. only 'org' and 'module' attrs are supported).
         <dependencies><override>
         <dependencies><dependency branch="..." force="..."  attrs.
          (Branch and force have no support in Gradle).
+}}}
     
     As of Gradle 1.0-milestone-6, there is this difference in behavior between
+{{{
         <dependencies><dependency><exclude...
+}}}
     in native Ivy and this plugin, for non-transitive dependencies.  With
     native Ivy, the exclusion applies to the parent dependency item in addition
     to transitive dependencies of it.
@@ -79,7 +91,9 @@ UNSUPPORTED ivy.xml features
     to the parent dependency item.
     
     As of Gradle 1.0-milestone-6, there is this difference in behavior between
+{{{
         <dependencies><exclude...
+}}}
     in native Ivy and this plugin, for non-transitive dependencies.  With
     native Ivy, if an <exclude> at this level excludes a peer-level
     dependency element, the behavior is crazy with some but not all
@@ -88,22 +102,25 @@ UNSUPPORTED ivy.xml features
     as well as to transitive dependencies.
         
     These elements and attributes are purposefully ignored, because the user may
-    want to profitably process the same "ivy.xml" file with another tool the can
+    want to profitably process the same ##ivy.xml## file with another tool the can
     make use of them.
+{{{
         <info> (and all attrs and sub-elements)  (Element is required by Ivy)
         <publications>  (and all attrs and sub-elements)
         <dependencies><dependency revConstraint="...">
           (Will differ from "rev" only when publishing, which is not a use case
           for us).
         <dependencies><dependency revConstraint="..."  attr.
+}}}
 
 
-USAGE
+== Usage
 
-Pull plugin from Internet.
+=== Pull plugin from Internet.
 
     Couldn't be easier.  This will pull the plugin from Maven Central:
 
+<<prettyPrint>> {{{
         buildscript {
             mavenCentral()
             dependencies {
@@ -119,8 +136,9 @@ Pull plugin from Internet.
 
         // Here's an example that triggers a resolve and download:
         println configurations['confName'].asPath
+}}}
 
-Use plugin jar file locally.
+=== Use plugin jar file locally.
 
     Just use your browser to go to the IvyXml directory at Maven
     Central.  http://repo1.maven.org/maven2/com/admc/gradle-ivyxml-plugin
@@ -132,6 +150,7 @@ Use plugin jar file locally.
     Or you can store it in a local directory, perhaps with other Gradle plugin
     jars.  The procedure is the same either way:
 
+<<prettyPrint>> {{{
         buildscript { dependencies {
             classpath fileTree(
                 dir: 'directory/containing/the/plugin/jar/file',
@@ -146,58 +165,59 @@ Use plugin jar file locally.
 
         // Here's an example that triggers a resolve and download:
         println configurations['confName'].asPath
+}}}
 
 
-SETTINGS
+=== Settings
 
     Java system properties are ALWAYS available in the dependency file as Ivy
-    variables.  This behavior is mandated by Ivy's own 'IvySettings'
+    variables.  This behavior is mandated by Ivy's own ##IvySettings##
     constructor.
 
-    File ivyxml.depFile
+ *= File ivyxml.depFile} |
         The Ivy dependency file to load when ivyxml.load() is executed.
-        Corresponds to native Ivy property 'ivy.dep.file'.
-        After Ivyxml v. 0.2.1, if Java system property "ivy.dep.file" is set,
+        Corresponds to native Ivy property ##ivy.dep.file##.
+        After Ivyxml v. 0.2.1, if Java system property ##ivy.dep.file## is set,
         then defaults to file(...) of that value, otherwise (for all versions
-        of Ivyxml) defaults to file('ivy.xml').
+        of Ivyxml) defaults to file(##ivy.xml##).
     
-    boolean ivyxml.instantiateConfigurations
+ *= boolean ivyxml.instantiateConfigurations |
         If this setting is true, then Gradle Configurations will be
         instantiated as necessary to match all Ivy confs.
         If false, then Ivy confs are ignored which both (a) have no
         corresponding Gradle conf, and (b) are not extended by any conf with
         corresponding Gradl conf.
-        To say the same thing from the opposite perspective, Ivy conf 'x' is
-        ignored unless a corresponding Gradle Configuration 'x' exists or
+        To say the same thing from the opposite perspective, Ivy conf ##x## is
+        ignored unless a corresponding Gradle Configuration ##x## exists or
         another (Gradle-Configuration-mirrored) conf extends (directly or
-        indirectly) 'x'.
+        indirectly) ##x##.
         If set to false, you should ensure that all Configurations to be
         effected by the ivy.xml file have been created ahead of time.
         (Excepting that non-leaf conf Configurations will still be created
         automatically).
-        Defaults to true, so everything "just works" by default.
+        Defaults to true, so everything //just works// by default.
 
-    Map<String, String> ivyxm.ivyVariables
+ *= Map<String, String> ivyxm.ivyVariables |
         You can use these variables in the ivy.xml file with references like
         ${this} in ivy.xml attribute values.
         [Before version 0.3.0 of this plugin, this property was named
-        'ivyProperties'].
+        ##ivyProperties##].
         Defaults to null (only Ivy's default variables, and Java system
         properties will be available in the dependency file).
 
-    String property projIvyVariablePrefix
+ *= String property projIvyVariablePrefix |
         [Before version 0.3.0 of this plugin, boolean property 
-        'variablizeProjStrings' controlled this behavior, with non-modifiable
-        prefix value of "gproj|"].
+        ##variablizeProjStrings## controlled this behavior, with non-modifiable
+        prefix value of ##gproj|##].
         If non-null, then all String type properties of your Gradle Project may
-        be used with references like this in ivy.xml attribute values:
-            ${YOUR_PREFIX_VALUEpropertyName}
+        be used with references like this in ivy.xml attribute
+        values:\\##${YOUR_PREFIX_VALUEpropertyName}##\\
         Set projIvyVariablePrefix to null to disable this feature altogether.
-        Defaults to 'gproj', so that attribute values like this will expand:
-            ${gproj|projectPropertyName}
+        Defaults to ##gproj##, so that attribute values like this will
+        expand:\\## ${gproj|projectPropertyName}##
 
 
-UTILITY METHOD
+=== Utility Method verifyResolve
 
     void com.admc.gradle.GradleUtil.verifyResolve(Configuration)
     Throws if all dependencies of the specified Configuration have not been
@@ -206,6 +226,7 @@ UTILITY METHOD
     bundled here only because it was convenient for me to do so.
     Use it like so:
 
+<<prettyPrint>> {{{
     buildscript {
         repositories { mavenCentral() }
         dependencies {
@@ -219,24 +240,27 @@ UTILITY METHOD
 
     compileJava.doFirst { GradleUtil.verifyResolve(configurations.compile) }
     // And so forth for all tasks that elicit an Ivy resolve.
+}}}
 
-    If you get a complaint like "ERRORS a required artifact is not listed by
-    module descriptor: *!.*", just rerun the same Gradle command with the
-    -s switch.  You will get a clean report about the missing artifacts.
+    If you get a complaint like "##ERRORS a required artifact is not listed by
+    module descriptor: *!.*##", just rerun the same Gradle command with
+    the ##-s## switch.  You will get a clean report about the missing artifacts.
 
 
 
-CLASSIFIERS
+=== Classifiers
 
     Beware that classifiers are incompatible with SNAPSHOT systems.
 
     Just code your ivy.xml file like this to use classifiers:
 
+<<prettyPrint>> {{{
     <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
     ...
     <dependency org="org.hsqldb" name="hsqldb" rev="[2,)" m:classifier="jdk5"/>
+}}}
 
     You can't use the classifier attribute on artifact elements, because the
     current version of the Ivy API seems to be broken there.
-    (Specifically, the 'classifier' parameter for the
+    (Specifically, the ##classifier## parameter for the
     DependencyArtifactDescriptor class has no effect).

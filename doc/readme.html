@@ -1,0 +1,531 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ - Copyright 2011 Axis Data Management Corp.
+ -
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -
+ - http://www.apache.org/licenses/LICENSE-2.0
+ -
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+
+ N.b.!  Unlike the default boilerplate, this one is not standalone.
+ You don't need to place any files with it (i.e. there are no relative file
+ dependencies), but there are dependencies to files in public Internet
+ repositories (at least ajax.agoogleapis.com).
+-->
+<html>
+<head>
+<title>readme</title>
+<meta name="Generator" content="JCreole">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script type="text/javascript"
+  src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+</script>
+<script type="text/javascript">
+  if ("undefined" == (typeof jQuery)) {
+      alert("Failed to load jQuery library from '"
+          + "'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'");
+      throw Error("Failed to load jQuery library from '"
+          + "'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'");
+  }
+</script>
+<script type="text/javascript"
+  src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+</script>
+<link rel="stylesheet" type="text/css"
+href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css">
+<script type="text/javascript">
+  localLinkRe = /#(.+)$/;
+  footNoteClones = [];
+  defListClones = [];
+  jcreoleInfoPopup = function(s) {
+      $('<p class="ui-state-default">' + s + "</p>").prependTo("body").dialog({
+          close: function() {$(this).dialog("destroy").remove();},
+          title: "Information"
+      });
+  };
+  displayFootnote = function(origLink) {
+      var extracted = localLinkRe.exec(origLink);
+      if (extracted === null) {
+          alert("Internal failure.  "
+                  + "Failed to extract local link from footnote ref");
+          throw new Error("Internal failure.  "
+                  + "Failed to extract local link from footnote ref");
+      }
+      $(footNoteClones[extracted[1]]).dialog("open");
+  };
+  displayMasterDef = function(origLink, defName) {
+      var extracted = localLinkRe.exec(origLink);
+      if (extracted === null) {
+          alert("Internal failure.  "
+                  + "Failed to extract local link from masterdeflist ref");
+          throw new Error("Internal failure.  "
+                  + "Failed to extract local link from masterdeflist ref");
+      }
+      $(defListClones[extracted[1]])
+            .dialog("option", "title", ("Definition for '" + defName + "'"))
+            .dialog("open");
+  };
+  $(function() {
+      $("a.jcreole_fnref").each(function() {
+          this.href = 'javascript:displayFootnote("' + this.href
+                + '"); void(0); // Display footnote';
+      });
+      $("div.jcx_footnotes > dl").each(function() {
+          footNoteClones[this.id] = $(this).find("dd > p").clone(false)
+                .dialog({autoOpen: false, title: "Footnote"});
+      });
+      $("a.jcreole_mdef").each(function() {
+          this.href = 'javascript:displayMasterDef("' + this.href + '", "'
+                + this.title + '"); void(0); // Display master def';
+      });
+      $("div.jcx_masterDef > dl").each(function() {
+          defListClones[this.id] = $(this).find("dd > p").clone(false)
+                .dialog({autoOpen: false});
+      });
+      $("div.jcreole_tabset").tabs();
+      prettyPrint()
+  });
+</script>
+<script type="text/javascript"
+  src="https://github.com/unsaved/jcreole/raw/master/google-code-prettify-small/1/prettify.js">
+</script>
+<style>
+  /******************************************************************
+   * Build-time dynamically-including google-code-prettify, because absolute
+   * URLs not working to the .css file, for unknown reason.  */
+   .pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
+  /*****  End of google-code-prettify inclusion  ********************/
+  body,table { font-size:16px; font-family:serif; }
+  tr { vertical-align:top; }
+  table.jcreole_data, table.jcreole_data input, table.jcreole_data select,
+  table.jcreole_data button,
+  table.jcreole_data textarea, table.jcreole_data td, table.jcreole_data th,
+  input, select, textarea, button, u, del, tt, sup, sub, pre, code  {
+      font-size:13px; font-family:sans-serif;
+  }
+  button { padding: 0; }
+  body {
+      margin-left:auto;
+      margin-right:auto;
+      background-color:white;
+      padding:10px;
+      margin:0;
+  }
+  img,p,div,form,table,pre,code {
+      margin:0;
+      padding:0;
+      border:0;
+      list-style-type:none;
+      background-repeat:no-repeat;
+  }
+  ul { margin-left:14px; padding-left:0; margin-top:0; margin-bottom:0; }
+  table hr {
+      height:1px;
+      clear:both;
+      /* margin:none: 0;  DisplayTag site had value of "none", which is illegal */
+      width:100%;
+  }
+  p { margin-top: 8px; margin-bottom:8px; }
+  table.jcreole_data thead th { vertical-align:bottom; }
+
+  /* FOLLOWING PILFERED (but extensively modified) FROM DISPLAYTABLE */
+
+  table.jcreole_data { border: 1px solid #666; }
+
+  table thead th, table td {
+      padding: 2px 4px 2px 4px !important;
+  }
+  table.jcreole_data tbody td {
+      text-align: left;
+      vertical-align: top;
+  }
+  table.jcreole_data thead th {
+      text-align: center;
+      vertical-align: bottom;
+  }
+
+  /* Don't set tr border or padding values.  It is non-portable. */
+
+  table.jcreole_data thead tr { background-color: #fc0; }
+  /* Don't set tr border or padding values.  It is non-portable. */
+
+  table.jcreole_data thead th a, table.jcreole_data thead th a:visited {
+      color: black;
+  }
+
+  table.jcreole_data thead th a:hover {
+      text-decoration: underline;
+      color: black;
+  }
+
+  table.jcreole_data tbody tr.jcreole_odd { background-color: #ededed }
+  /* Don't set tr border or padding values.  It is non-portable. */
+
+  table.jcreole_data tbody tr.jcreole_even { background-color: #fea }
+  /* Don't set tr border or padding values.  It is non-portable. */
+
+  .jcreole_orphanLink {
+      background-color:red;
+      color:black;
+      font-weight:bold;
+  }
+
+  div.jcreole_footer {
+      font-size: 12px;
+      font-family: sans-serif;
+      text-align:center;
+  }
+
+  div.jcreole .yellow { background-color:yellow; }
+
+  div.jcx_toc { font-size:12px; }
+  div.jcx_toc span.jcx_enum { font-variant:normal; font-weight:bold; }
+  h1 span.jcx_enum, h2 span.jcx_enum, h3 span.jcx_enum,
+  h4 span.jcx_enum, h5 span.jcx_enum, h6 span.jcx_enum { font-family:serif; }
+
+  div.reftoc { float:right; margin-left:50px; font-variant:small-caps; }
+
+  div.jcreole div.clear { clear:both; }
+
+  h6 { margin:0; }
+  h6 span.jcreole_hbody {
+      font-family:monospace;
+      font-size:14px;
+      background-color:#DDDDDD;
+  }
+  h1 {
+      margin-top:0;
+      text-align:center;
+      background-color:#F8F8F8;
+      border:solid #DDDDDD 1px;
+      padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
+  }
+  h1 span.jcreole_hbody {
+      margin:0;
+      padding-top:0; padding-bottom:0; padding-left:0; padding-right:0;
+  }
+  h2 span.jcreole_hbody, h3 span.jcreole_hbody {
+      background-color:#F4F4F4;
+      border:solid #DDDDDD 2px;
+  }
+  h4 span.jcreole_hbody, h5 span.jcreole_hbody { background-color:#F4F4F4; }
+  h2 span.jcreole_hbody, h3 span.jcreole_hbody,
+  h4 span.jcreole_hbody, h5 span.jcreole_hbody, h6 span.jcreole_hbody {
+      margin:0;
+      padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
+  }
+
+  span.jcx_enum { font-weight:bold; font-family:serif; }
+  span.jcreole_strike { text-decoration: line-through; }
+  span.jcreole_underline { text-decoration: underline; }
+  span.jcreole_em { font-style: italic; }
+  span.jcreole_strong { font-weight: bold; }
+  span.jcreole_monospace { font-family: monospace; }
+
+  span.jcreole_lh { font-weight:bolder; font-family:monospace; margin-right:10px; }
+
+  div.jcx_masterDef {
+    border: solid gray 2px;
+    padding:0;
+    display:inline-block;
+  }
+  dl { border-bottom: solid silver 1px; padding:4px; margin:1px; }
+  dt { font-weight: bolder; font-family:monospace; }
+
+  div.ui-tabs { font-size:16px; font-family:serif; }
+</style>
+<link rel="stylesheet" type="text/css" href="site.css" />
+
+</head>
+<body>
+<div class="jcreole">
+<h1 id="jcsect_IvyxmlGradlePlugin"><span class="jcreole_hbody"> Ivyxml Gradle Plugin</span></h1>
+
+
+<p>Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
+<strong>IMPORTANT:</strong>  Users who are upgrading Gradle or upgrading Ivyxml should read
+the file <tt>upgrade.txt</tt> in the <tt>doc</tt> subdirectory.</p>
+
+<p>This plugin loads dependency definitions from an Ivy dependency file
+(aka <tt>ivy.xml</tt>) into Gradle.</p>
+
+<p>Purposefully does not do anything with any ivysettings.xml file.  Purposefully
+ignores publishing-related ivy.xml elements and attributes.</p>
+
+<p>The <tt>doc</tt> subdirectory contains an example.  Take a look at the <tt>build.gradle</tt>
+and <tt>ivy.xml</tt> files there, and run gradle from that directory.</p>
+
+<p>This work was motivated by discussion for issue GRADLE-197 at
+<a href="http://issues.gradle.org/browse/GRADLE-197">http://issues.gradle.org/browse/GRADLE-197</a>, and started with code snippets
+from there.  I have added much more complete support since then.</p>
+
+<p>This plugin also bundles the Gradle utility method</p>
+<pre class="prettyprint">
+    public void com.admc.gradle.VerifyResolve(Configuration)
+</pre>
+<p>This is a work-around for problems where Gradle silently fails to satisfy some
+dependencies.</p>
+
+
+<h2 id="jcsect_AdvancedFeatures"><span class="jcreole_hbody"> Advanced features</span></h2>
+
+<ul>
+  <li>   Support for configuration inheritance via <tt>extends</tt></li>
+  <li>   Support for <tt>transitive</tt> settings on confs and/or dependencies</li>
+  <li>   Support for <em>classifiers</em> specified using a <tt>.../ivy/maven</tt> namespace</li>
+  <li>   Automatically set Ivy variables for every Gradle String-type property.
+      (Default key prefix is <tt>gproj|</tt>, so reference with <tt>${gproj|name}</tt>).</li>
+  <li>   User-configurable ivy dep file (a real File instance).</li>
+  <li>   User-configurable additional Ivy variables.</li>
+  <li>   User-configurable whether to ignore non-instantiated confs or to
+     auto-instantiate Gradle Configurations.</li>
+</ul>
+
+<p><strong>With Gradle milestone-6, you will get warnings If you run ivyxml.load()
+  after you apply Gradle's maven plugin.  The warnings look like this:</strong></p>
+<pre>
+    The MavenPluginConvention.getPomDirName() method is deprecated...
+</pre>
+<p><strong> and</strong></p>
+<pre>
+    The MavenPluginConvention.getPomDir() method is deprecated...
+</pre>
+<p><strong> Ignore these messages, because the message text is wrong, and Ivyxml is
+</strong> doing nothing wrong.
+<strong> I have registered issue GRADLE-1967:
+</strong>     <a href="http://issues.gradle.org/browse/GRADLE-1967">http://issues.gradle.org/browse/GRADLE-1967</a></p>
+
+
+<h2 id="jcsect_UnsupportedIvyXmlFeatures"><span class="jcreole_hbody"> UNSUPPORTED ivy.xml features</span></h2>
+
+<p>    Most ivy.xml elements and attributes are supported.  Here we document those
+    which are not.</p>
+
+<p>    The following ivy.xml elements and attributes are ignored.  I did my best
+    to detect and either, support, throw or warn, but the public Ivy API just
+    does not allow for access to these settings.</p>
+<pre>
+        &lt;conflicts&gt; (and all attrs and sub-elements)
+        &lt;dependencies&gt;&lt;dependency&gt;&lt;conf&gt;  (For conf-mapping)
+        &lt;dependencies&gt;&lt;dependency&gt;&lt;artifact conf=&quot;...&quot;&gt;  attr.
+        &lt;dependencies&gt;&lt;dependency&gt;&lt;*&gt;&lt;conf&gt;
+</pre>
+
+<p>    The following elements and attribute are purposefully prohibited.  We don't
+    support them, it would be misleading to silently ignore then, and we can
+    detect their usage.</p>
+<pre>
+        &lt;dependencies&gt;&lt;dependency&gt;&lt;exclude artifact=&quot;...&quot; type=&quot;...&quot;
+            ext=&quot;...&quot; matcher=&quot;...&quot; cont=&quot;...&quot;
+            (i.e. only 'org' and 'module' attrs are supported).
+        &lt;dependencies&gt;&lt;override&gt;
+        &lt;dependencies&gt;&lt;dependency branch=&quot;...&quot; force=&quot;...&quot;  attrs.
+         (Branch and force have no support in Gradle).
+</pre>
+
+<p>    As of Gradle 1.0-milestone-6, there is this difference in behavior between</p>
+<pre>
+        &lt;dependencies&gt;&lt;dependency&gt;&lt;exclude...
+</pre>
+<p>    in native Ivy and this plugin, for non-transitive dependencies.  With
+    native Ivy, the exclusion applies to the parent dependency item in addition
+    to transitive dependencies of it.
+    With Ivyxml, the exclusion applies to the transitive dependencies but not
+    to the parent dependency item.</p>
+
+<p>    As of Gradle 1.0-milestone-6, there is this difference in behavior between</p>
+<pre>
+        &lt;dependencies&gt;&lt;exclude...
+</pre>
+<p>    in native Ivy and this plugin, for non-transitive dependencies.  With
+    native Ivy, if an &lt;exclude&gt; at this level excludes a peer-level
+    dependency element, the behavior is crazy with some but not all
+    dependencies excluded.
+    With Ivyxml, the exclusion applies consistently to peer-level dependencies
+    as well as to transitive dependencies.</p>
+
+<p>    These elements and attributes are purposefully ignored, because the user may
+    want to profitably process the same <tt>ivy.xml</tt> file with another tool the can
+    make use of them.</p>
+<pre>
+        &lt;info&gt; (and all attrs and sub-elements)  (Element is required by Ivy)
+        &lt;publications&gt;  (and all attrs and sub-elements)
+        &lt;dependencies&gt;&lt;dependency revConstraint=&quot;...&quot;&gt;
+          (Will differ from &quot;rev&quot; only when publishing, which is not a use case
+          for us).
+        &lt;dependencies&gt;&lt;dependency revConstraint=&quot;...&quot;  attr.
+</pre>
+
+
+<h2 id="jcsect_Usage"><span class="jcreole_hbody"> Usage</span></h2>
+
+<h3 id="jcsect_PullPluginFromInternet"><span class="jcreole_hbody"> Pull plugin from Internet.</span></h3>
+
+<p>    Couldn't be easier.  This will pull the plugin from Maven Central:</p>
+<pre class="prettyprint">
+        buildscript {
+            mavenCentral()
+            dependencies {
+                classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
+            }
+        }
+        apply plugin: 'ivyxml'
+        apply plugin: 'java'  // Load any plugins that define configurations
+        ...
+        ivyxml.load()
+        // Note that the load() does not resolve or download anything.
+        // What load()s are dependency records.
+
+        // Here's an example that triggers a resolve and download:
+        println configurations['confName'].asPath
+</pre>
+
+<h3 id="jcsect_UsePluginJarFileLocally"><span class="jcreole_hbody"> Use plugin jar file locally.</span></h3>
+
+<p>    Just use your browser to go to the IvyXml directory at Maven
+    Central.  <a href="http://repo1.maven.org/maven2/com/admc/gradle-ivyxml-plugin">http://repo1.maven.org/maven2/com/admc/gradle-ivyxml-plugin</a>
+    Click into the version that you want.
+    Right-click and download the only *.jar file in that directory.</p>
+
+<p>    You can save the plugin jar with your project, thereby automatically
+    sharing it with other project developers (assuming you use some SCM system).
+    Or you can store it in a local directory, perhaps with other Gradle plugin
+    jars.  The procedure is the same either way:</p>
+<pre class="prettyprint">
+        buildscript { dependencies {
+            classpath fileTree(
+                dir: 'directory/containing/the/plugin/jar/file',
+                include: 'gradle-ivyxml-plugin-*.jar
+            )
+        } }
+        apply plugin: 'ivyxml'
+        ...             // Define your custom configurations
+        ivyxml.load()
+        // Note that the load() does not resolve or download anything.
+        // What load()s are dependency records.
+
+        // Here's an example that triggers a resolve and download:
+        println configurations['confName'].asPath
+</pre>
+
+
+<h3 id="jcsect_Settings"><span class="jcreole_hbody"> Settings</span></h3>
+
+<p>    Java system properties are ALWAYS available in the dependency file as Ivy
+    variables.  This behavior is mandated by Ivy's own <tt>IvySettings</tt>
+    constructor.</p>
+
+<ul>
+  <li><span class="jcreole_lh"> File ivyxml.depFile} </span><span class="jcreole_ld">
+        The Ivy dependency file to load when ivyxml.load() is executed.
+        Corresponds to native Ivy property <tt>ivy.dep.file</tt>.
+        After Ivyxml v. 0.2.1, if Java system property <tt>ivy.dep.file</tt> is set,
+        then defaults to file(...) of that value, otherwise (for all versions
+        of Ivyxml) defaults to file(<tt>ivy.xml</tt>).</span></li>
+</ul>
+
+<ul>
+  <li><span class="jcreole_lh"> boolean ivyxml.instantiateConfigurations </span><span class="jcreole_ld">
+        If this setting is true, then Gradle Configurations will be
+        instantiated as necessary to match all Ivy confs.
+        If false, then Ivy confs are ignored which both (a) have no
+        corresponding Gradle conf, and (b) are not extended by any conf with
+        corresponding Gradl conf.
+        To say the same thing from the opposite perspective, Ivy conf <tt>x</tt> is
+        ignored unless a corresponding Gradle Configuration <tt>x</tt> exists or
+        another (Gradle-Configuration-mirrored) conf extends (directly or
+        indirectly) <tt>x</tt>.
+        If set to false, you should ensure that all Configurations to be
+        effected by the ivy.xml file have been created ahead of time.
+        (Excepting that non-leaf conf Configurations will still be created
+        automatically).
+        Defaults to true, so everything <em>just works</em> by default.</span></li>
+</ul>
+
+<ul>
+  <li><span class="jcreole_lh"> Map&lt;String, String&gt; ivyxm.ivyVariables </span><span class="jcreole_ld">
+        You can use these variables in the ivy.xml file with references like
+        ${this} in ivy.xml attribute values.
+        [Before version 0.3.0 of this plugin, this property was named</span><ol>
+    <li>ivyProperties<tt>].
+        Defaults to null (only Ivy's default variables, and Java system
+        properties will be available in the dependency file).</tt></li>
+  </ol></li>
+</ul>
+
+<ul>
+  <li><span class="jcreole_lh"> String property projIvyVariablePrefix </span><span class="jcreole_ld">
+        [Before version 0.3.0 of this plugin, boolean property </span><ol>
+    <li>variablizeProjStrings<tt> controlled this behavior, with non-modifiable
+        prefix value of </tt>gproj|<tt>].
+        If non-null, then all String type properties of your Gradle Project may
+        be used with references like this in ivy.xml attribute
+        values:<br></tt>${YOUR_PREFIX_VALUEpropertyName}<tt><br>
+        Set projIvyVariablePrefix to null to disable this feature altogether.
+        Defaults to </tt>gproj<tt>, so that attribute values like this will
+        expand:<br></tt> ${gproj|projectPropertyName}<tt></tt></li>
+  </ol></li>
+</ul>
+
+
+<h3 id="jcsect_UtilityMethodVerifyresolve"><span class="jcreole_hbody"> Utility Method verifyResolve</span></h3>
+
+<p>    void com.admc.gradle.GradleUtil.verifyResolve(Configuration)
+    Throws if all dependencies of the specified Configuration have not been
+    satisfied by at least one artifact.
+    This method is entirely independent of Ivy XML functionality and is
+    bundled here only because it was convenient for me to do so.
+    Use it like so:</p>
+<pre class="prettyprint">
+    buildscript {
+        repositories { mavenCentral() }
+        dependencies {
+            classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
+        }
+    }
+
+    apply plugin: 'ivyxml'
+
+    import com.admc.gradle.GradleUtil
+
+    compileJava.doFirst { GradleUtil.verifyResolve(configurations.compile) }
+    // And so forth for all tasks that elicit an Ivy resolve.
+</pre>
+
+<p>    If you get a complaint like &quot;<tt>ERRORS a required artifact is not listed by
+    module descriptor: *!.*</tt>&quot;, just rerun the same Gradle command with
+    the <tt>-s</tt> switch.  You will get a clean report about the missing artifacts.</p>
+
+
+
+<h3 id="jcsect_Classifiers"><span class="jcreole_hbody"> Classifiers</span></h3>
+
+<p>    Beware that classifiers are incompatible with SNAPSHOT systems.</p>
+
+<p>    Just code your ivy.xml file like this to use classifiers:</p>
+<pre class="prettyprint">
+    &lt;ivy-module version=&quot;2.0&quot; xmlns:m=&quot;http://ant.apache.org/ivy/maven&quot;&gt;
+    ...
+    &lt;dependency org=&quot;org.hsqldb&quot; name=&quot;hsqldb&quot; rev=&quot;[2,)&quot; m:classifier=&quot;jdk5&quot;/&gt;
+</pre>
+
+<p>    You can't use the classifier attribute on artifact elements, because the
+    current version of the Ivy API seems to be broken there.
+    (Specifically, the <tt>classifier</tt> parameter for the
+    DependencyArtifactDescriptor class has no effect).</p>
+
+</div>
+
+<hr>
+<div class="jcreole_footer">Generated by JCreole v. 1.1.2 @ 2012-01-08T22:34:35-0500.
+&nbsp; &nbsp; &nbsp; &nbsp;
+Apache 2 license &copy; 2011 by Axis Data Management Corp.</div>
+</body>
+</html>
