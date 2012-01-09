@@ -200,15 +200,15 @@ dependencies.
  *= Map<String, String> ivyxm.ivyVariables |
         You can use these variables in the ivy.xml file with references like
         ${this} in ivy.xml attribute values.
-        [Before version 0.3.0 of this plugin, this property was named
-        ##ivyProperties##].
+        [Before version 0.3.0 of this plugin, this property was
+        named ##ivyProperties##].
         Defaults to null (only Ivy's default variables, and Java system
         properties will be available in the dependency file).
 
  *= String property projIvyVariablePrefix |
-        [Before version 0.3.0 of this plugin, boolean property 
-        ##variablizeProjStrings## controlled this behavior, with non-modifiable
-        prefix value of ##gproj|##].
+        [Before version 0.3.0 of this plugin, boolean
+        property ##variablizeProjStrings## controlled this behavior, with
+        non-modifiable prefix value of ##gproj|##].
         If non-null, then all String type properties of your Gradle Project may
         be used with references like this in ivy.xml attribute
         values:\\##${YOUR_PREFIX_VALUEpropertyName}##\\
