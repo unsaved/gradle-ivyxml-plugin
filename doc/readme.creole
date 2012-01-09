@@ -1,5 +1,7 @@
 = Ivyxml Gradle Plugin
 
+<<toc>>
+
 
 Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
 **IMPORTANT:**  Users who are upgrading Gradle or upgrading Ivyxml should read
