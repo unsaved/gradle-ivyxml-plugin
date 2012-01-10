@@ -21,7 +21,8 @@ http://issues.gradle.org/browse/GRADLE-197, and started with code snippets
 from there.  I have added much more complete support since then.
 
 This plugin also bundles the Gradle utility method
-<<prettyPrint>> {{{
+<<prettyPrint >>
+{{{
     public void com.admc.gradle.VerifyResolve(Configuration)
 }}}
 This is a work-around for problems where Gradle silently fails to satisfy some
@@ -121,8 +122,8 @@ dependencies.
 === Pull plugin from Internet.
 
     Couldn't be easier.  This will pull the plugin from Maven Central:
-
-<<prettyPrint>> {{{
+<<prettyPrint>>
+{{{
         buildscript {
             mavenCentral()
             dependencies {
@@ -151,8 +152,8 @@ dependencies.
     sharing it with other project developers (assuming you use some SCM system).
     Or you can store it in a local directory, perhaps with other Gradle plugin
     jars.  The procedure is the same either way:
-
-<<prettyPrint>> {{{
+<<prettyPrint>>
+{{{
         buildscript { dependencies {
             classpath fileTree(
                 dir: 'directory/containing/the/plugin/jar/file',
@@ -213,10 +214,16 @@ dependencies.
         non-modifiable prefix value of ##gproj|##].
         If non-null, then all String type properties of your Gradle Project may
         be used with references like this in ivy.xml attribute
-        values:\\##${YOUR_PREFIX_VALUEpropertyName}##\\
+        values: <<prettyPrint>>
+{{{
+${YOUR_PREFIX_VALUEpropertyName}
+}}}
         Set projIvyVariablePrefix to null to disable this feature altogether.
         Defaults to ##gproj##, so that attribute values like this will
-        expand:\\## ${gproj|projectPropertyName}##
+        expand: <<prettyPrint>>
+{{{
+${gproj|projectPropertyName}
+}}}
 
 
 === Utility Method verifyResolve
@@ -227,8 +234,8 @@ dependencies.
     This method is entirely independent of Ivy XML functionality and is
     bundled here only because it was convenient for me to do so.
     Use it like so:
-
-<<prettyPrint>> {{{
+<<prettyPrint>>
+{{{
     buildscript {
         repositories { mavenCentral() }
         dependencies {
@@ -255,8 +262,8 @@ dependencies.
     Beware that classifiers are incompatible with SNAPSHOT systems.
 
     Just code your ivy.xml file like this to use classifiers:
-
-<<prettyPrint>> {{{
+<<prettyPrint>>
+{{{
     <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
     ...
     <dependency org="org.hsqldb" name="hsqldb" rev="[2,)" m:classifier="jdk5"/>
