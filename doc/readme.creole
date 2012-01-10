@@ -1,6 +1,6 @@
 = Ivyxml Gradle Plugin
 
-<<toc>>
+<<toc /x____x>>
 
 
 Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
