@@ -97,8 +97,6 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 		}
 
 		moduleDescriptor.configurationsNames.each { confName ->
-			println "FIND: " + confName
-
 			if (!gradleProjConfMap.containsKey(confName)) {
 				if (!instantiateConfigurations) return
 					gp.configurations {
