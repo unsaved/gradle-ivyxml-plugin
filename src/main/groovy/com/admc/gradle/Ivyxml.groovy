@@ -23,188 +23,207 @@ import org.gradle.api.artifacts.Configuration;
  */
 
 class Ivyxml {
-    /*
-     * I don't see from Ivy API how I can detect a publications element.
-     * If learn how to, display a warning that this plugin does nothing with
-     * that element.
-     *
-     * DefaultDependencyArtifact is pretty essential here, and is not in the
-     * public API.
-     * http://massapi.com/source/gradle-0.9-rc-3/subprojects/gradle-core/src/main/groovy/org/gradle/api/internal/artifacts/dependencies/DefaultDependencyArtifact.java.html
-     */
-    private Project gp
-    File depFile
-    Map<String, String> ivyVariables
-    String projIvyVariablePrefix = 'gproj|'
-    boolean instantiateConfigurations = true
+	/*
+	 * I don't see from Ivy API how I can detect a publications element.
+	 * If learn how to, display a warning that this plugin does nothing with
+	 * that element.
+	 *
+	 * DefaultDependencyArtifact is pretty essential here, and is not in the
+	 * public API.
+	 * http://massapi.com/source/gradle-0.9-rc-3/subprojects/gradle-core/src/main/groovy/org/gradle/api/internal/artifacts/dependencies/DefaultDependencyArtifact.java.html
+	 */
+	private Project gp
+	File depFile
+	Map<String, String> ivyVariables
+	String projIvyVariablePrefix = 'gproj|'
+	boolean instantiateConfigurations = true
 
-    Ivyxml(Project p) {
-        gp = p
-    }
+	Ivyxml(Project p) {
+		gp = p
+	}
 
-    void excludeModule(module) {
-        gp.configurations.all*.exclude group: module.organisation, module: module.name
-    }
-    
-    void handleExcludeRules(excludeRules) {
-        // it's not obvious from the code if the excludeRules array can ever be null
-        if(excludeRules == null) { return }
-        
-        excludeRules.each { rule ->
-            excludeModule rule.id.mid
-        }
-    }
-    
-    void load() {
-        def gradleProjConfMap =
-                gp.configurations.collectEntries { [(it.name): it] }
+	void excludeModule(module) {
+		gp.configurations.all*.exclude group: module.organisation, module: module.name
+	}
 
-        IvySettings ivySettings = new IvySettings();
-        ivySettings.defaultInit();
-        if (projIvyVariablePrefix != null) gp.properties.each {
-            if (it.value instanceof String)
-                ivySettings.setVariable(
-                        projIvyVariablePrefix + it.key, it.value, true)
-        }
-        File file = ((depFile == null)
-                ? gp.file((System.properties['ivy.dep.file'] == null)
-                        ? 'ivy.xml' : System.properties['ivy.dep.file'])
-                : depFile)
-        assert file.isFile() && file.canRead():
-            """Ivy dep file inaccessible:  $file.absolutePath
+	void handleExcludeRules(excludeRules) {
+		// it's not obvious from the code if the excludeRules array can ever be null
+		if(excludeRules == null) { return }
+
+		excludeRules.each { rule ->
+			excludeModule rule.id.mid
+		}
+	}
+
+	void load() {
+		def gradleProjConfMap =
+				gp.configurations.collectEntries { [(it.name): it] }
+
+		IvySettings ivySettings = new IvySettings();
+		ivySettings.defaultInit();
+		
+		if (projIvyVariablePrefix != null) gp.properties.each {
+			if (it.value instanceof String)
+				ivySettings.setVariable(
+						projIvyVariablePrefix + it.key, it.value, true)
+		}
+		
+		File file = ((depFile == null)
+				? gp.file((System.properties['ivy.dep.file'] == null)
+				? 'ivy.xml' : System.properties['ivy.dep.file'])
+				: depFile)
+		assert file.isFile() && file.canRead():
+		"""Ivy dep file inaccessible:  $file.absolutePath
 Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
 """
-        if (ivyVariables != null) {
-            ivySettings.addAllVariables(ivyVariables, true)
-            gp.logger.info('Added ' + ivyVariables.size()
-                    + ' properties from user-supplied map as Ivy variables')
-        }
-        DefaultModuleDescriptor moduleDescriptor =
-                (DefaultModuleDescriptor) XmlModuleDescriptorParser.instance
-                .parseDescriptor(ivySettings, file.toURL(), false)
-        if (moduleDescriptor.allDependencyDescriptorMediators.any {
-            it.allRules.values().any {
-                it instanceof OverrideDependencyDescriptorMediator
-            }
-        }) throw new GradleException(
-                '''Ivy 'override' element not supported yet''')
-        String mavenNsPrefix = null
-        for (e in moduleDescriptor.extraAttributesNamespaces)
-            if (e.value.endsWith('/ivy/maven')) { mavenNsPrefix = e.key; break; }
-        moduleDescriptor.configurationsNames.each { confName ->
-            if (!gradleProjConfMap.containsKey(confName)) {
-                if (!instantiateConfigurations) return
-                gp.configurations {
-                    gradleProjConfMap[confName] = add(confName)
-                }
-            }
-            org.apache.ivy.core.module.descriptor.Configuration c =
-                    moduleDescriptor.getConfiguration(confName)
-            Configuration gradleConfig = gp.configurations.getByName(confName)
-            c.extends.each { parentConfName ->
-                if (!gradleProjConfMap.containsKey(parentConfName))
-                    gp.configurations {
-                        gradleProjConfMap[parentConfName] = add(parentConfName)
-                    }
-                gradleConfig.extendsFrom(gp.configurations.getByName(parentConfName))
-            }
-            gradleConfig.transitive = c.transitive
-            gradleConfig.visible = c.visibility == Visibility.PUBLIC
-            if (gradleConfig.description == null)
-                gradleConfig.description = c.description
-        }
-        
-        if(moduleDescriptor.canExclude()) {
-            handleExcludeRules(moduleDescriptor.allExcludeRules)
-        }
-        
-        moduleDescriptor.dependencies.each {
-            DependencyDescriptor descriptor ->
-                def mappableConfNames = descriptor.moduleConfigurations.findAll {
-                    gradleProjConfMap.containsKey(it)
-                }
-            for (mappableConfName in mappableConfNames) {
-                if (!mappableConfName) return
-                /*
-                if (descriptor.canExclude())
-                N.b. this catches the case we don't want to catch,
-                <dependency><exclude>, instead of <dependencies><exclude>.
-                    throw new GradleException(
-                    '''Plugin does not yet support dependency 'exclude'.''')
-                */
-                if (descriptor.allIncludeRules.size() != 0)
-                    throw new GradleException(
-                    '''Plugin does not yet support dependency 'include'.''')
-                if (descriptor.force)
-                    throw new GradleException(
-                            '''Gradle does not support Ivy 'force'.''')
-                ModuleRevisionId id = descriptor.dependencyRevisionId
-                if (id.branch != null)
-                    throw new GradleException(
-                            '''Gradle does not support Ivy 'branches'.''')
-                def depAttrs = [
-                    group: id.organisation,
-                    name: id.name,
-                    version: id.revision
-                ]
-                if (mavenNsPrefix != null
-                        && descriptor.qualifiedExtraAttributes.containsKey(
-                        mavenNsPrefix + ':classifier'))
-                    depAttrs['classifier'] = descriptor.qualifiedExtraAttributes[
-                            mavenNsPrefix + ':classifier']
-                DefaultExternalModuleDependency dep
-                gp.dependencies { dep = add(mappableConfName, depAttrs) }
-                dep.changing = descriptor.changing
-                dep.transitive = descriptor.transitive
+		if (ivyVariables != null) {
+			ivySettings.addAllVariables(ivyVariables, true)
+			gp.logger.info('Added ' + ivyVariables.size()
+					+ ' properties from user-supplied map as Ivy variables')
+		}
 
-                descriptor.allDependencyArtifacts.each {
-                    DependencyArtifactDescriptor depArt ->
-                        if (depArt.getExtraAttribute('classifier'))
-                            throw new GradleException(
-                                'Ivyxml plugin does not support classifier '
-                                + 'attribute for artifact element, because '
-                                + 'this setting is not working with the '
-                                + 'current version of the Ivy API.')
-                       // depArt.configurations will always be populated here,
-                       // even if no conf attribute or element inside of
-                       // <dependencies>.
-                        // FUCKING IMPOSSIBLE to detect conf attr or subelement
-                        // here!  The 'conf' attr doesn't even appear like
-                        // every other attr does with
-                        // depArt.getAttribute('conf')
-                        // or depArt.getAttributes().
-                        dep.addArtifact(new DefaultDependencyArtifact(
-                          // Parameter #4 is supposed to be for a classifier,
-                          // but it does not work.
-                          // Because of this, we apply classifier values above
-                          // in the
-                                depArt.name, depArt.type,
-                                depArt.ext, null, depArt.url))
-                }
+		DefaultModuleDescriptor moduleDescriptor =
+				(DefaultModuleDescriptor) XmlModuleDescriptorParser.instance
+				.parseDescriptor(ivySettings, file.toURL(), false)
 
-                def excRuleContainer = dep.excludeRules
-                descriptor.excludeRules?.values().each {
-                    def ruleList -> ruleList.each {
-                        def excludeAttrs = [:]
-                        it.attributes.each { k, v ->
-                            if (k == 'matcher') {
-                                if (v == 'exact') return
-                            } else if (v == '*') {
-                                return
-                            }
-                            if (k == 'organisation') excludeAttrs['group'] = v
-                            else if (k == 'module') excludeAttrs['module'] = v
-                            else throw new GradleException(
-                                    '''Dependency 'exclude ' does not '''
-                                    + "support Ivy attribute '$k'")
-                        }
-                        assert excludeAttrs.size() > 0
-                        excRuleContainer.add(
-                                new DefaultExcludeRule(excludeAttrs))
-                    }
-                }
-                gradleProjConfMap[mappableConfName].getDependencies().add(dep)
-            }
-        }
-    }
+		if (moduleDescriptor.allDependencyDescriptorMediators.any {
+			it.allRules.values().any { it instanceof OverrideDependencyDescriptorMediator }
+			}) throw new GradleException(
+			'''Ivy 'override' element not supported yet''')
+
+		String mavenNsPrefix = null
+		for (e in moduleDescriptor.extraAttributesNamespaces) {
+			if (e.value.endsWith('/ivy/maven')) { mavenNsPrefix = e.key; break; }
+		}
+
+		moduleDescriptor.configurationsNames.each { confName ->
+			if (!gradleProjConfMap.containsKey(confName)) {
+				if (!instantiateConfigurations) return
+					gp.configurations {
+						gradleProjConfMap[confName] = add(confName)
+					}
+			}
+			org.apache.ivy.core.module.descriptor.Configuration c =
+					moduleDescriptor.getConfiguration(confName)
+			Configuration gradleConfig = gp.configurations.getByName(confName)
+			c.extends.each { parentConfName ->
+				if (!gradleProjConfMap.containsKey(parentConfName))
+					gp.configurations {
+						gradleProjConfMap[parentConfName] = add(parentConfName)
+					}
+				gradleConfig.extendsFrom(gp.configurations.getByName(parentConfName))
+			}
+			gradleConfig.transitive = c.transitive
+			gradleConfig.visible = c.visibility == Visibility.PUBLIC
+			if (gradleConfig.description == null)
+				gradleConfig.description = c.description
+		}
+
+		if(moduleDescriptor.canExclude()) {
+			handleExcludeRules(moduleDescriptor.allExcludeRules)
+		}
+
+		moduleDescriptor.dependencies.each { DependencyDescriptor descriptor ->
+			def mappableConfNames = descriptor.moduleConfigurations.findAll { gradleProjConfMap.containsKey(it) }
+			for (mappableConfName in mappableConfNames) {
+				if (!mappableConfName) return
+				/*
+				 if (descriptor.canExclude())
+				 N.b. this catches the case we don't want to catch,
+				 <dependency><exclude>, instead of <dependencies><exclude>.
+				 throw new GradleException(
+				 '''Plugin does not yet support dependency 'exclude'.''')
+				 */
+				if (descriptor.allIncludeRules.size() != 0)
+					throw new GradleException(
+					'''Plugin does not yet support dependency 'include'.''')
+				if (descriptor.force)
+					throw new GradleException(
+					'''Gradle does not support Ivy 'force'.''')
+				ModuleRevisionId id = descriptor.dependencyRevisionId
+				if (id.branch != null)
+					throw new GradleException(
+					'''Gradle does not support Ivy 'branches'.''')
+
+				def depAttrs = [
+							group: id.organisation,
+							name: id.name,
+							version: id.revision,
+						]
+
+				if (mavenNsPrefix != null
+				&& descriptor.qualifiedExtraAttributes.containsKey(
+				mavenNsPrefix + ':classifier'))
+					depAttrs['classifier'] = descriptor.qualifiedExtraAttributes[
+								mavenNsPrefix + ':classifier']
+
+				DefaultExternalModuleDependency dep
+				gp.dependencies { dep = add(mappableConfName, depAttrs) }
+				dep.changing = descriptor.changing
+				dep.transitive = descriptor.transitive
+
+				descriptor.allDependencyArtifacts.each { DependencyArtifactDescriptor depArt ->
+					DefaultDependencyArtifact newDefaultDependencyArtifact
+
+					if (mavenNsPrefix != null
+					&& depArt.getExtraAttribute(mavenNsPrefix + ':classifier')){
+						newDefaultDependencyArtifact = new DefaultDependencyArtifact(
+								depArt.name, depArt.type,
+								depArt.ext, depArt.getExtraAttribute(mavenNsPrefix + ':classifier'), depArt.url)
+					}else{
+						newDefaultDependencyArtifact = new DefaultDependencyArtifact(
+								depArt.name, depArt.type,
+								depArt.ext, null, depArt.url)
+					}
+
+					for (artConf in depArt.configurations) {
+						def depConf
+						if(artConf.contains("->")) {
+							depConf = artConf.split("->")[1]
+							artConf = artConf.split("->")[0]
+						}else{
+							depConf = "default"
+							artConf = "default"
+						}
+
+						if(artConf.equals(mappableConfName)) {
+							depAttrs['configuration'] = depConf
+							dep.addArtifact(newDefaultDependencyArtifact)
+						} else{
+							DefaultExternalModuleDependency artDep
+							depAttrs['configuration'] = depConf
+							gp.dependencies { artDep = add(artConf, depAttrs) }
+							artDep.changing = descriptor.changing
+							artDep.transitive = descriptor.transitive
+							artDep.addArtifact(newDefaultDependencyArtifact)
+						}
+					}
+				}
+
+				def excRuleContainer = dep.excludeRules
+				descriptor.excludeRules?.values().each { def ruleList ->
+					ruleList.each {
+						def excludeAttrs = [:]
+						it.attributes.each { k, v ->
+							if (k == 'matcher') {
+								if (v == 'exact') return
+							} else if (v == '*') {
+								return
+							}
+							if (k == 'organisation') excludeAttrs['group'] = v
+							else if (k == 'module') excludeAttrs['module'] = v
+							else if (k == 'artifact') excludeAttrs['artifact'] = v
+							else throw new GradleException(
+								'''Dependency 'exclude ' does not '''
+								+ "support Ivy attribute '$k'")
+						}
+						assert excludeAttrs.size() > 0
+						excRuleContainer.add(
+								new DefaultExcludeRule(excludeAttrs))
+					}
+				}
+				gradleProjConfMap[mappableConfName].getDependencies().add(dep)
+			}
+		}
+	}
 }
