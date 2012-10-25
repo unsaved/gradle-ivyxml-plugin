@@ -17,8 +17,8 @@ if (localGradleFile.isFile()) {
 }
 
 // Defaults that can be overridden with property files:
-project.setProperty('org.name', System.properties['user.name'])
-project.setProperty('jar.title', 'Customization')
+project.ext.set('org.name', System.properties['user.name'])
+project.ext.set('jar.title', 'Customization')
 
 propFileLoader.typeCasting=true
 propFileLoader.traditionalPropertiesInit()

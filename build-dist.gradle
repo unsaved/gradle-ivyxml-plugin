@@ -53,7 +53,9 @@ uploadArchives {
 
     repositories.mavenDeployer {
         configuration = configurations.deployJars
-        beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+        beforeDeployment {
+            MavenDeployment deployment -> signing.signPom(deployment)
+        }
         if (project.hasProperty('mavenRepository.dest.url'))
             repository(url: project.property('mavenRepository.dest.url')) {
                 authentication(authMap)
