@@ -3,7 +3,7 @@ defaultTasks 'jar'
 buildscript {
     repositories { mavenCentral() }
     dependencies {
-        classpath 'com.admc:gradle-javaPropFile-plugin:latest.milestone'
+        classpath 'com.admc:gradle-javaPropFile-plugin:0.6.0'
     }
 }
 
