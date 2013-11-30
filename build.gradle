@@ -10,6 +10,9 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'javaPropFile'
 
+// No effect since current Groovy compiler can't do later than 1.5.
+compileGroovy.targetCompatibility = '1.5'
+
 def localGradleFile = file('local.gradle')
 if (localGradleFile.isFile()) {
     logger.info('''Executing optional build file 'localGradleFile'.''')
