@@ -95,7 +95,7 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
             if (!gradleProjConfMap.containsKey(confName)) {
                 if (!instantiateConfigurations) return
                 gp.configurations {
-                    gradleProjConfMap[confName] = add(confName)
+                    gradleProjConfMap[confName] = create(confName)
                 }
             }
             org.apache.ivy.core.module.descriptor.Configuration c =
@@ -104,7 +104,7 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
             c.extends.each { parentConfName ->
                 if (!gradleProjConfMap.containsKey(parentConfName))
                     gp.configurations {
-                        gradleProjConfMap[parentConfName] = add(parentConfName)
+                        gradleProjConfMap[parentConfName] = create(parentConfName)
                     }
                 gradleConfig.extendsFrom(gp.configurations.getByName(parentConfName))
             }
