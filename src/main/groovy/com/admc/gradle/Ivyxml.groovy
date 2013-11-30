@@ -158,28 +158,45 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                 dep.transitive = descriptor.transitive
 
                 descriptor.allDependencyArtifacts.each {
+                    // Contents of this each block contributed by Nate Steffan
                     DependencyArtifactDescriptor depArt ->
-                        if (depArt.getExtraAttribute('classifier'))
-                            throw new GradleException(
-                                'Ivyxml plugin does not support classifier '
-                                + 'attribute for artifact element, because '
-                                + 'this setting is not working with the '
-                                + 'current version of the Ivy API.')
-                       // depArt.configurations will always be populated here,
-                       // even if no conf attribute or element inside of
-                       // <dependencies>.
-                        // FUCKING IMPOSSIBLE to detect conf attr or subelement
-                        // here!  The 'conf' attr doesn't even appear like
-                        // every other attr does with
-                        // depArt.getAttribute('conf')
-                        // or depArt.getAttributes().
-                        dep.addArtifact(new DefaultDependencyArtifact(
-                          // Parameter #4 is supposed to be for a classifier,
-                          // but it does not work.
-                          // Because of this, we apply classifier values above
-                          // in the
-                                depArt.name, depArt.type,
-                                depArt.ext, null, depArt.url))
+                          DefaultDependencyArtifact newDefaultDependencyArtifact
+
+                    if (mavenNsPrefix != null
+                      && depArt.getExtraAttribute(mavenNsPrefix + ':classifier')) {
+                        newDefaultDependencyArtifact = new DefaultDependencyArtifact(
+                                depArt.name, depArt.type, depArt.ext,
+                                depArt.getExtraAttribute(mavenNsPrefix
+                                + ':classifier'), depArt.url)
+                    } else {
+                        newDefaultDependencyArtifact =
+                                new DefaultDependencyArtifact(
+                                        depArt.name, depArt.type,
+                                        depArt.ext, null, depArt.url)
+                    }
+
+                    for (artConf in depArt.configurations) {
+                        def depConf
+                        if(artConf.contains("->")) {
+                            depConf = artConf.split("->")[1]
+                            artConf = artConf.split("->")[0]
+                        }else{
+                            depConf = "default"
+                            artConf = "default"
+                        }
+
+                        if(artConf.equals(mappableConfName)) {
+                            depAttrs['configuration'] = depConf
+                            dep.addArtifact(newDefaultDependencyArtifact)
+                        } else{
+                            DefaultExternalModuleDependency artDep
+                            depAttrs['configuration'] = depConf
+                            gp.dependencies { artDep = add(artConf, depAttrs) }
+                            artDep.changing = descriptor.changing
+                            artDep.transitive = descriptor.transitive
+                            artDep.addArtifact(newDefaultDependencyArtifact)
+                        }
+                    }
                 }
 
                 def excRuleContainer = dep.excludeRules
@@ -194,6 +211,9 @@ Set plugin property 'ivyxml.depFile' to a File object for your ivy xml file.
                             }
                             if (k == 'organisation') excludeAttrs['group'] = v
                             else if (k == 'module') excludeAttrs['module'] = v
+                            // Following case contributed by Nate Steffan
+                            else if (k == 'artifact')
+                                    excludeAttrs['artifact'] = v
                             else throw new GradleException(
                                     '''Dependency 'exclude ' does not '''
                                     + "support Ivy attribute '$k'")
