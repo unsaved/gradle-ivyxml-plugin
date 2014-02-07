@@ -125,7 +125,7 @@ dependencies.
 <<prettyPrint>>
 {{{
         buildscript {
-            mavenCentral()
+            repositories { mavenCentral() }
             dependencies {
                 classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
             }
