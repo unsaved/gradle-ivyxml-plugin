@@ -1,14 +1,14 @@
-defaultTasks 'jar'
-
 buildscript {
-    repositories { mavenCentral() }
+    repositories { jcenter() }
     dependencies {
-        classpath 'com.admc:gradle-javaPropFile-plugin:0.6.0'
+        classpath 'com.admc:gradle-javaPropFile-plugin:1.0.0'
     }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'javaPropFile'
+apply plugin: 'com.admc.javaPropFile'
+
+defaultTasks 'jar'
 
 // GroovyCompile setting defaults to this, but has no effect since current
 // Groovy compiler can't do later than 1.5.
@@ -34,15 +34,26 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    compile localGroovy()
+    //groovy localGroovy()  // Unnecessary and illegal with Gradle 2.0
     testCompile 'org.hamcrest:hamcrest-library:1.3.RC2'
 }
 
 task noop << { }
 noop.description = 'Noop task for Gradle testing'
 
+processResources << {
+    // Add license file to META-INF subdir
+    copy {
+        from 'doc'
+        into new File(sourceSets.main.output.resourcesDir, 'META-INF')
+        include 'LICENSE.txt'
+    }
+    println 'done'
+}
+
 jar { doFirst {
-    project.metaInf << files('doc/LICENSE.txt')
+    // metaInf property apparently gone with Gradle 2.0
+    //project.metaInf << files('doc/LICENSE.txt')
     jar { manifest { attributes(
         'Specification-Title': 'Ivyxml Gradle Plugin',
         'Specification-Version': project.property('spec.version'),

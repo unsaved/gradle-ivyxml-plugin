@@ -300,8 +300,8 @@ class IvyxmlPluginTest {
     void projProperties() {
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
-        project.setProperty('utest.orgsuffix', 'hsqldb')
-        project.setProperty('utest.module', 'sqltool')
+        project.ext.set('utest.orgsuffix', 'hsqldb')
+        project.ext.set('utest.module', 'sqltool')
         IvyxmlPluginTest.load('projVariables', project.ivyxml)
         // Gradle does not support clearing of property values
         GradleUtil.verifyResolve(project.configurations.defaultConf)
@@ -315,8 +315,8 @@ class IvyxmlPluginTest {
     void unsetProjProperties() {
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
-        project.setProperty('utest.orgsuffix', 'hsqldb')
-        project.setProperty('utest.module', 'sqltool')
+        project.ext.set('utest.orgsuffix', 'hsqldb')
+        project.ext.set('utest.module', 'sqltool')
         project.ivyxml.projIvyVariablePrefix = null
         IvyxmlPluginTest.load('projVariables', project.ivyxml)
         // Gradle does not support clearing of property values
@@ -327,8 +327,8 @@ class IvyxmlPluginTest {
     void badProjPrefixProperties() {
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
-        project.setProperty('utest.orgsuffix', 'hsqldb')
-        project.setProperty('utest.module', 'sqltool')
+        project.ext.set('utest.orgsuffix', 'hsqldb')
+        project.ext.set('utest.module', 'sqltool')
         project.ivyxml.projIvyVariablePrefix = 'bad.'
         IvyxmlPluginTest.load('projVariables', project.ivyxml)
         // Gradle does not support clearing of property values
@@ -339,8 +339,8 @@ class IvyxmlPluginTest {
     void projPrefixProperties() {
         assert !project.hasProperty('utest.orgsuffix')
         assert !project.hasProperty('utest.module')
-        project.setProperty('utest.orgsuffix', 'hsqldb')
-        project.setProperty('utest.module', 'sqltool')
+        project.ext.set('utest.orgsuffix', 'hsqldb')
+        project.ext.set('utest.module', 'sqltool')
         project.ivyxml.projIvyVariablePrefix = 'explicitPref.'
         IvyxmlPluginTest.load('projPrefixVariables', project.ivyxml)
         // Gradle does not support clearing of property values
