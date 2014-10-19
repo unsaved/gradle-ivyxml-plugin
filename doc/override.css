@@ -1,0 +1,17 @@
+div.jcreole p.notepanel {
+    background-color: #87CEFA;
+    margin: 10px 5px;
+    border: 5px #87CEFA groove;
+    padding: 5px;
+    font-weight: bold; /* Would like lower value but that poorly supported */
+    font-size: 95%;
+}
+
+div.jcreole div.jcx_toc {
+    margin-bottom: 15px;
+    font-size: 80%;
+}
+
+div.jcreole h2, div.jcreole a:link {
+    color: #000080;
+}

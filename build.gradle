@@ -17,7 +17,7 @@ compileGroovy.targetCompatibility =  '1.5'
 
 def localGradleFile = file('local.gradle')
 if (localGradleFile.isFile()) {
-    logger.info('''Executing optional build file 'localGradleFile'.''')
+    logger.info('''Executing optional build file 'local.gradle'.''')
     apply from: localGradleFile
 }
 

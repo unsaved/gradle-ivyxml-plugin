@@ -2,21 +2,28 @@ buildscript {
     // This 'buildscript' only here because with current version of Gradle,
     // 'buildscript' is only honored from the top-level build file executed.
     // When we "apply" 'build.gradle, the 'buildscript' there will be ignored.
-    repositories { mavenCentral() }
-    dependencies {
-        classpath 'com.admc:gradle-javaPropFile-plugin:latest.milestone'
-    }
+    repositories {
+        jcenter()
+		//mavenCentral()
+	}
+	dependencies {
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+        classpath "com.admc:gradle-javaPropFile-plugin:1.0.0"
+	}
 }
 
 apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'com.jfrog.bintray'
 
+/*  ENABLE THIS BLOCK to enable client-side PGP signing for MC or BinTray:
+apply plugin: 'signing'
 signing {
     sign configurations.archives
 }
+*/
 
 apply from: 'build.gradle'
-defaultTasks 'uploadArchives'
+defaultTasks 'bintrayUpload'
 
 artifacts {
      archives sourcesJar
@@ -24,6 +31,8 @@ artifacts {
 }
 
 configurations { deployJars }
+
+dependencies { runtime "org.apache.ivy:ivy:2.3.0" }
 
 if (project.hasProperty('mavenRepository.dest.url')) {
     def url = project.property('mavenRepository.dest.url')
@@ -53,9 +62,10 @@ uploadArchives {
 
     repositories.mavenDeployer {
         configuration = configurations.deployJars
-        beforeDeployment {
-            MavenDeployment deployment -> signing.signPom(deployment)
-        }
+        if (project.hasProperty('signing.keyId'))
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
         if (project.hasProperty('mavenRepository.dest.url'))
             repository(url: project.property('mavenRepository.dest.url')) {
                 authentication(authMap)
@@ -125,3 +135,70 @@ uploadArchives { doFirst {
                     + project.property(it).class.name + '\n')
     }
 } }
+
+bintray {
+    if (project.hasProperty('bintray.user'))
+        user = project.property('bintray.user')
+    if (project.hasProperty('bintray.apikey'))
+        key = project.property('bintray.apikey')
+	configurations = ['archives']
+    //dryRun = true
+    //publish = false
+
+	pkg {
+        if (project.hasProperty('bintray.repo'))
+            repo = project.property('bintray.repo')
+		name = project.property('name')
+        if (project.hasProperty('bintray.repo.org'))
+            userOrg = project.property('bintray.repo.org')
+		desc = project.property('description')
+		websiteUrl = project.property('url')
+		issueTrackerUrl = websiteUrl + '/issues'
+		vcsUrl = project.property('scm.url')
+		licenses = ['Apache-2.0']
+        // label values are used for Bintray and Gradle plugin site search
+        // links.  On Gradle plugin site the search links are labeled like #x.
+		labels = ['gradle', 'ivy', 'ivy.xml']
+		publicDownloadNumbers = true
+        // attributes?
+		version {
+			// name = Bintree logical version name
+            if (project.hasProperty('version.description'))
+                desc = project.property('version.description')
+            // released = date
+            if (project.hasProperty('scm.tag'))
+                vcsTag = project.property('scm.tag')
+                // Defaults to version without this.
+                // Since my convention is to tag precisely with version, this
+                // is unnecessary for me.
+			attributes = [
+                'gradle-plugin': "com.admc.ivyxml:$project.group:$project.name"
+			]
+            /* This is for BinTree server-side signing.
+             * For this to work, you must upload private and public keys to
+             * BinTree account, and enable signing on the target repository.
+             * The passphrase is the passphrase that your PGP key tool
+             * encrypted the private key with.
+             * To do it client-side instead, comment out the following and
+             * enable the signing plugin above.
+             * If 'signing.password' isn't set, there will be no signing.
+             */
+            gpg {
+                sign = project.hasProperty('signing.password')
+                passphrase = (project.hasProperty('signing.password')
+                  ? project.property('signing.password') : null)
+            }
+		}
+	}
+}
+
+bintrayUpload.dependsOn << {
+    ['bintray.user', 'bintray.apikey', 'bintray.repo',
+     'version.description'].each {
+        assert (project.hasProperty(it) && project.property(it) != null
+                && project.property(it) != '') :
+            """Property '$it' is required by 'bintray' task.
+"""
+    }
+    print ''  // Gradle parser can't handle the loop terminating this block.
+}

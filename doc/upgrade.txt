@@ -3,6 +3,7 @@ Important information for users upgrading Ivyxml
 
 GOTCHA TIPS:
 
+    * Version 1.0.* and later require Gradle 2.0 or later.
     * Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
       (This is due to compatibility-killing Groovy upgrade in Gradle).
     * If you upgrade gradle to milestone-6, completely wipe out your Gradle
@@ -12,8 +13,17 @@ GOTCHA TIPS:
 
 Recent functional changes.
 
+    Gradle 2.0 stopped making the Ivy API visible to Gradle scripts.
+    Consequently, version 1.0.* and later of Ivyxml has a buildscript-level
+    dependency upon the Ivy jar.
+    If you pull this plugin from a proper repository using either the
+    buildscript or new plugins script block, the Ivy jar will be downloaded
+    automatically.
+    If you bundle the Ivyxml jar file locally, then you will now also need to
+    bundle the Ivy jar (as exemplified in the main Ivyxml documentation).
+
     See item abouts <dependency><exclude> and <dependency><dependency><exclude>
-    under "UNSUPPORTED" in README.txt.
+    under "UNSUPPORTED" in the main Ivyxml documentation.
 
     With version 0.3.1 added support for <dependencies><exclude> elements.
     Thanks for Steven Dick for the contribution.
@@ -30,5 +40,6 @@ Recent functional changes.
           Default usage much simplified since the user doesn't have to do any
           Configuration setup ahead-of-time.  This behavior can be toggled with
           new boolean property 'instantiateConfigurations'.
-          See fine points in the SETTINGS section of README.txt if you will be
-          setting 'instantiateConfigurations' to false.
+          See fine points in the SETTINGS section of the main Ivyxml
+          documentation if you will be setting 'instantiateConfigurations' to
+          false.

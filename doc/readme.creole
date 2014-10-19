@@ -1,14 +1,19 @@
 = Ivyxml Gradle Plugin
 
-<<toc /x____x>>
-
-
-Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
-**IMPORTANT:**  Users who are upgrading Gradle or upgrading Ivyxml should read
-the file ##upgrade.txt## in the ##doc## subdirectory.
-
+<<addClass =block notepanel>>
 This plugin loads dependency definitions from an Ivy dependency file
 (aka ##ivy.xml##) into Gradle.
+Besides encapsulating library dependencies to a single place, you use the
+simpler XML syntax specified in the Ivy documentation
+(instead of using Groovy syntax).
+
+<<toc /x____x>>
+
+* Version 1.0.* and later require Gradle 2.0 or later.
+*Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
+* **IMPORTANT:**  Users who are upgrading Gradle or upgrading Ivyxml should read
+the file ##upgrade.txt## in the ##doc## subdirectory.
+\\ \\
 
 Purposefully does not do anything with any ivysettings.xml file.  Purposefully
 ignores publishing-related ivy.xml elements and attributes.
@@ -41,18 +46,18 @@ dependencies.
 *   User-configurable whether to ignore non-instantiated confs or to
      auto-instantiate Gradle Configurations.
 
-**With Gradle milestone-6, you will get warnings If you run ivyxml.load()
+**With Gradle milestone-6**, you will get warnings If you run ivyxml.load()
   after you apply Gradle's maven plugin.  The warnings look like this:
 {{{
     The MavenPluginConvention.getPomDirName() method is deprecated...
 }}}
-** and
+and
 {{{
     The MavenPluginConvention.getPomDir() method is deprecated...
 }}}
-** Ignore these messages, because the message text is wrong, and Ivyxml is
-** doing nothing wrong.
-** I have registered issue GRADLE-1967:
+Ignore these messages, because the message text is wrong, and Ivyxml is
+doing nothing wrong.
+I have registered issue GRADLE-1967:
 **     http://issues.gradle.org/browse/GRADLE-1967
 
 
@@ -121,16 +126,18 @@ dependencies.
 
 === Pull plugin from Internet.
 
-    Couldn't be easier.  This will pull the plugin from Maven Central:
+    Couldn't be easier.  This will pull the plugin from jCenter:
 <<prettyPrint>>
 {{{
         buildscript {
-            mavenCentral()
+            repositories { jcenter() }  // Before plugin v. 1.0.0 use mavenCentral()
             dependencies {
                 classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
+                // For strictly repeatable builds, replace 'latest.integration'
+                // with the latest literal GA version label.
             }
         }
-        apply plugin: 'ivyxml'
+        apply plugin: 'com.admc.ivyxml'
         apply plugin: 'java'  // Load any plugins that define configurations
         ...
         ivyxml.load()
@@ -158,6 +165,11 @@ dependencies.
             classpath fileTree(
                 dir: 'directory/containing/the/plugin/jar/file',
                 include: 'gradle-ivyxml-plugin-*.jar
+            ),
+            // Following not needed for Ivyxml before 1.0.0 / Gradle before 2.0
+            classpath fileTree(
+                dir: 'directory/containing/ivy/jar/file',
+                include: 'apache-ivy-*.jar
             )
         } }
         apply plugin: 'ivyxml'
@@ -177,7 +189,7 @@ dependencies.
     variables.  This behavior is mandated by Ivy's own ##IvySettings##
     constructor.
 
- *= File ivyxml.depFile} |
+ *= File ivyxml.depFile |
         The Ivy dependency file to load when ivyxml.load() is executed.
         Corresponds to native Ivy property ##ivy.dep.file##.
         After Ivyxml v. 0.2.1, if Java system property ##ivy.dep.file## is set,

@@ -14,15 +14,17 @@
 defaultTasks 'resolveAndDisplayDepPaths'
 
 buildscript {
-    repositories { mavenCentral() }
+    repositories { jcenter() }  // Before plugin v. 1.0.0 use mavenCentral()
     dependencies {
         classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
+        // For strictly repeatable builds, replace 'latest.integration' with
+        // the latest literal GA version label.
     }
 }
 apply plugin: 'java'
-apply plugin: 'ivyxml'
+apply plugin: 'com.admc.ivyxml'
 
-repositories { mavenCentral() }
+repositories { jcenter() }
 
 configurations {
     custom  // Would usually do some meaningful config. of the Conf somewhere

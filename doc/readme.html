@@ -14,10 +14,16 @@
  - See the License for the specific language governing permissions and
  - limitations under the License.
 
- N.b.!  Unlike the default boilerplate, this one is not standalone.
- You don't need to place any files with it (i.e. there are no relative file
- dependencies), but there are dependencies to files in public Internet
- repositories (at least ajax.agoogleapis.com).
+
+   Ultimate source of content starting here is the file "boilerplate-inet.html".
+
+   N.b.!  Unlike the standalone boilerplate, this one is not standalone.
+   You don't need to place any files with it (i.e. there are no relative file
+   dependencies), but there are dependencies to files in public Internet CDN
+   repositories.  CDNs are designed to provide maximum availability.
+
+   Boilerplate authors:  Use ! only for build-time parameter references.
+   Build will fail if you use ! for runtime variables.
 -->
 <html>
 <head>
@@ -25,21 +31,21 @@
 <meta name="Generator" content="JCreole">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <script type="text/javascript"
-  src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  src="https://code.jquery.com/jquery-1.10.2.min.js">
 </script>
 <script type="text/javascript">
   if ("undefined" == (typeof jQuery)) {
       alert("Failed to load jQuery library from '"
-          + "'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'");
+          + "'https://code.jquery.com/jquery-1.10.2.min.js'");
       throw Error("Failed to load jQuery library from '"
-          + "'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'");
+          + "'https://code.jquery.com/jquery-1.10.2.min.js'");
   }
 </script>
 <script type="text/javascript"
-  src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+  src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js">
 </script>
 <link rel="stylesheet" type="text/css"
-href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css">
+href="https://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css">
 <script type="text/javascript">
   localLinkRe = /#(.+)$/;
   footNoteClones = [];
@@ -90,186 +96,209 @@ href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/
                 .dialog({autoOpen: false});
       });
       $("div.jcreole_tabset").tabs();
-      prettyPrint()
   });
 </script>
 <script type="text/javascript"
-  src="https://github.com/unsaved/jcreole/raw/master/google-code-prettify-small/1/prettify.js">
+  src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js">
 </script>
 <style>
   /******************************************************************
-   * Build-time dynamically-including google-code-prettify, because absolute
-   * URLs not working to the .css file, for unknown reason.  */
-   .pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
-  /*****  End of google-code-prettify inclusion  ********************/
-  body,table { font-size:16px; font-family:serif; }
-  tr { vertical-align:top; }
-  table.jcreole_data, table.jcreole_data input, table.jcreole_data select,
-  table.jcreole_data button,
-  table.jcreole_data textarea, table.jcreole_data td, table.jcreole_data th,
-  input, select, textarea, button, u, del, tt, sup, sub, pre, code  {
-      font-size:13px; font-family:sans-serif;
-  }
-  button { padding: 0; }
-  body {
-      margin-left:auto;
-      margin-right:auto;
-      background-color:white;
-      padding:10px;
-      margin:0;
-  }
-  img,p,div,form,table,pre,code {
-      margin:0;
-      padding:0;
-      border:0;
-      list-style-type:none;
-      background-repeat:no-repeat;
-  }
-  ul { margin-left:14px; padding-left:0; margin-top:0; margin-bottom:0; }
-  table hr {
-      height:1px;
-      clear:both;
-      /* margin:none: 0;  DisplayTag site had value of "none", which is illegal */
-      width:100%;
-  }
-  p { margin-top: 8px; margin-bottom:8px; }
-  table.jcreole_data thead th { vertical-align:bottom; }
+   * Build-time including JCreole's site.css sample.
+   * Including inline so that our styles will not cause a network dependency. */
+   body,table { font-size:16px; font-family:serif; }
+tr { vertical-align:top; }
+table.jcreole_data, table.jcreole_data input, table.jcreole_data select,
+table.jcreole_data button,
+table.jcreole_data textarea, table.jcreole_data td, table.jcreole_data th,
+input, select, textarea, button, u, del, tt, sup, sub, pre, code  {
+    font-size:13px; font-family:sans-serif;
+    /* I have another version with font-size:82% here.  Which is better? */
+}
+/*  Redundant?
+div input, div select, div textarea, div button, div u, div del, div tt, div sup, div sub, div pre, div code  {
+    font-size:100%; font-family:sans-serif;
+}
+*/
+button { padding: 0; }
+body {
+    margin-left:auto;
+    margin-right:auto;
+    background-color:white;
+    padding:10px;
+    margin:0;
+}
+img,p,div,form,table,pre,code {
+    margin:0;
+    padding:0;
+    border:0;
+    list-style-type:none;
+    background-repeat:no-repeat;
+}
+ul { margin-left:14px; padding-left:0; margin-top:0; margin-bottom:0; }
+table hr {
+    height:1px;
+    clear:both;
+    /* margin:none: 0;  DisplayTag site had value of "none", which is illegal */
+    width:100%;
+}
+p { margin-top: 8px; margin-bottom:8px; }
+table.jcreole_data thead th { vertical-align:bottom; }
 
-  /* FOLLOWING PILFERED (but extensively modified) FROM DISPLAYTABLE */
+/* FOLLOWING PILFERED (but extensively modified) FROM DISPLAYTABLE */
 
-  table.jcreole_data { border: 1px solid #666; }
+table.jcreole_data { border: 1px solid #666; }
 
-  table thead th, table td {
-      padding: 2px 4px 2px 4px !important;
-  }
-  table.jcreole_data tbody td {
-      text-align: left;
-      vertical-align: top;
-  }
-  table.jcreole_data thead th {
-      text-align: center;
-      vertical-align: bottom;
-  }
+table thead th, table td {
+    padding: 2px 4px 2px 4px !important;
+}
+table.jcreole_data tbody td {
+    text-align: left;
+    vertical-align: top;
+}
+table.jcreole_data thead th {
+    text-align: center;
+    vertical-align: bottom;
+}
 
-  /* Don't set tr border or padding values.  It is non-portable. */
+/* Don't set tr border or padding values.  It is non-portable. */
 
-  table.jcreole_data thead tr { background-color: #fc0; }
-  /* Don't set tr border or padding values.  It is non-portable. */
+table.jcreole_data thead tr { background-color: #fc0; }
+/* Don't set tr border or padding values.  It is non-portable. */
 
-  table.jcreole_data thead th a, table.jcreole_data thead th a:visited {
-      color: black;
-  }
+table.jcreole_data thead th a, table.jcreole_data thead th a:visited {
+    color: black;
+}
 
-  table.jcreole_data thead th a:hover {
-      text-decoration: underline;
-      color: black;
-  }
+table.jcreole_data thead th a:hover {
+    text-decoration: underline;
+    color: black;
+}
 
-  table.jcreole_data tbody tr.jcreole_odd { background-color: #ededed }
-  /* Don't set tr border or padding values.  It is non-portable. */
+table.jcreole_data tbody tr.jcreole_odd { background-color: #ededed }
+/* Don't set tr border or padding values.  It is non-portable. */
 
-  table.jcreole_data tbody tr.jcreole_even { background-color: #fea }
-  /* Don't set tr border or padding values.  It is non-portable. */
+table.jcreole_data tbody tr.jcreole_even { background-color: #fea }
+/* Don't set tr border or padding values.  It is non-portable. */
 
-  .jcreole_orphanLink {
-      background-color:red;
-      color:black;
-      font-weight:bold;
-  }
+   .jcreole_orphanLink {
+    background-color:red;
+    color:black;
+    font-weight:bold;
+}
 
-  div.jcreole_footer {
-      font-size: 12px;
-      font-family: sans-serif;
-      text-align:center;
-  }
+div.jcreole_footer {
+    font-size: 12px;
+    font-family: sans-serif;
+    text-align:center;
+}
 
-  div.jcreole .yellow { background-color:yellow; }
+div.jcx_toc span.jcx_enum {
+    font-size:90%;
+    font-variant:normal;
+    font-weight:bold:
+}
+h1 span.jcx_enum, h2 span.jcx_enum, h3 span.jcx_enum,
+h4 span.jcx_enum, h5 span.jcx_enum, h6 span.jcx_enum { font-family:serif; }
 
-  div.jcx_toc { font-size:12px; }
-  div.jcx_toc span.jcx_enum { font-variant:normal; font-weight:bold; }
-  h1 span.jcx_enum, h2 span.jcx_enum, h3 span.jcx_enum,
-  h4 span.jcx_enum, h5 span.jcx_enum, h6 span.jcx_enum { font-family:serif; }
+div.reftoc { float:right; margin-left:50px; font-variant:small-caps; }
 
-  div.reftoc { float:right; margin-left:50px; font-variant:small-caps; }
+h6 { margin:0; }
+h6 span.jcreole_hbody { background-color:#DDDDDD; }
+h1 {
+    margin-top:0;
+    text-align:center;
+    background-color:#F8F8F8;
+    border:solid #DDDDDD 1px;
+    padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
+}
+h1 span.jcreole_hbody {
+    margin:0;
+    padding-top:0; padding-bottom:0; padding-left:0; padding-right:0;
+}
+h2 span.jcreole_hbody, h3 span.jcreole_hbody {
+    background-color:#F4F4F4;
+    border:solid #DDDDDD 2px;
+}
+h4 span.jcreole_hbody, h5 span.jcreole_hbody { background-color:#F4F4F4; }
+h2 span.jcreole_hbody, h3 span.jcreole_hbody,
+h4 span.jcreole_hbody, h5 span.jcreole_hbody, h6 span.jcreole_hbody {
+    margin:0;
+    padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
+}
 
-  div.jcreole div.clear { clear:both; }
+span.jcx_enum { font-weight:bold; font-family:serif; }
+span.jcreole_strike { text-decoration: line-through; }
+span.jcreole_underline { text-decoration: underline; }
+span.jcreole_em { font-style: italic; }
+span.jcreole_strong { font-weight: bold; }
+span.jcreole_monospace { font-family: monospace; }
 
-  h6 { margin:0; }
-  h6 span.jcreole_hbody {
-      font-family:monospace;
-      font-size:14px;
-      background-color:#DDDDDD;
-  }
-  h1 {
-      margin-top:0;
-      text-align:center;
-      background-color:#F8F8F8;
-      border:solid #DDDDDD 1px;
-      padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
-  }
-  h1 span.jcreole_hbody {
-      margin:0;
-      padding-top:0; padding-bottom:0; padding-left:0; padding-right:0;
-  }
-  h2 span.jcreole_hbody, h3 span.jcreole_hbody {
-      background-color:#F4F4F4;
-      border:solid #DDDDDD 2px;
-  }
-  h4 span.jcreole_hbody, h5 span.jcreole_hbody { background-color:#F4F4F4; }
-  h2 span.jcreole_hbody, h3 span.jcreole_hbody,
-  h4 span.jcreole_hbody, h5 span.jcreole_hbody, h6 span.jcreole_hbody {
-      margin:0;
-      padding-top:0; padding-bottom:0; padding-left:2px; padding-right:2px;
-  }
+/* Work-around for IEs idiotic default of static vertical scroll bar: */
+textarea { overflow: auto; }
 
-  span.jcx_enum { font-weight:bold; font-family:serif; }
-  span.jcreole_strike { text-decoration: line-through; }
-  span.jcreole_underline { text-decoration: underline; }
-  span.jcreole_em { font-style: italic; }
-  span.jcreole_strong { font-weight: bold; }
-  span.jcreole_monospace { font-family: monospace; }
+span.jcreole_lh { font-weight:bolder; font-family:monospace; margin-right:10px; }
 
-  span.jcreole_lh { font-weight:bolder; font-family:monospace; margin-right:10px; }
-
-  div.jcx_masterDef {
+div.jcx_masterDef {
     border: solid gray 2px;
     padding:0;
     display:inline-block;
-  }
-  dl { border-bottom: solid silver 1px; padding:4px; margin:1px; }
-  dt { font-weight: bolder; font-family:monospace; }
+}
+dl { border-bottom: solid silver 1px; padding:4px; margin:1px; }
+dt { font-weight: bolder; font-family:monospace; }
 
-  div.ui-tabs { font-size:16px; font-family:serif; }
+/* Due to complicated and non-portable inheritance font settings through
+ * ancestor block elements, setting an absolute size here instead of a % */
+div.ui-tabs { font-size:16px; font-family:serif; }
+
+pre.prettyprint { border:1px dashed blue; padding:5px; }
+
+  /*****  End of provided .css inclusions  ********************/
+
+  /* Ref-guide-specific OVERRIDES */
+  div.jcx_toc { font-size:12px; }
+  h6 span.jcreole_hbody {
+      font-size:14px;
+      font-family:monospace;
+  }
+  div.jcreole div.clear { clear:both; }
+  div.jcreole .yellow { background-color:yellow; }
 </style>
-<link rel="stylesheet" type="text/css" href="site.css" />
+<link rel="stylesheet" type="text/css" href="override.css" />
 
 </head>
 <body>
 <div class="jcreole">
 <h1 id="jcsect_IvyxmlGradlePlugin"><span class="jcreole_hbody"> Ivyxml Gradle Plugin</span></h1>
 
+<p class="notepanel">
+This plugin loads dependency definitions from an Ivy dependency file
+(aka <tt>ivy.xml</tt>) into Gradle.
+Besides encapsulating library dependencies to a single place, you use the
+simpler XML syntax specified in the Ivy documentation
+(instead of using Groovy syntax).</p>
+
 <div class="jcx_toc">
 <ul class="jcx_toc">
-  <li><a href="#jcsect_AdvancedFeatures">Advanced features</a></li>
-  <li><a href="#jcsect_UnsupportedIvyXmlFeatures">UNSUPPORTED ivy.xml features</a></li>
-  <li><a href="#jcsect_Usage">Usage</a><ul>
-    <li><a href="#jcsect_PullPluginFromInternet">Pull plugin from Internet.</a></li>
-    <li><a href="#jcsect_UsePluginJarFileLocally">Use plugin jar file locally.</a></li>
-    <li><a href="#jcsect_Settings">Settings</a></li>
-    <li><a href="#jcsect_UtilityMethodVerifyresolve">Utility Method verifyResolve</a></li>
-    <li><a href="#jcsect_Classifiers">Classifiers</a></li>
+  <li><a href="#jcsect_AdvancedFeatures" target="_self">Advanced features</a></li>
+  <li><a href="#jcsect_UnsupportedIvyXmlFeatures" target="_self">UNSUPPORTED ivy.xml features</a></li>
+  <li><a href="#jcsect_Usage" target="_self">Usage</a><ul>
+    <li><a href="#jcsect_PullPluginFromInternet" target="_self">Pull plugin from Internet.</a></li>
+    <li><a href="#jcsect_UsePluginJarFileLocally" target="_self">Use plugin jar file locally.</a></li>
+    <li><a href="#jcsect_Settings" target="_self">Settings</a></li>
+    <li><a href="#jcsect_UtilityMethodVerifyresolve" target="_self">Utility Method verifyResolve</a></li>
+    <li><a href="#jcsect_Classifiers" target="_self">Classifiers</a></li>
   </ul></li>
 </ul>
 </div>
 
 
-
-<p>Version 0.3.* and later require Gradle 1.0-milestone-6 or later.
-<strong>IMPORTANT:</strong>  Users who are upgrading Gradle or upgrading Ivyxml should read
-the file <tt>upgrade.txt</tt> in the <tt>doc</tt> subdirectory.</p>
-
-<p>This plugin loads dependency definitions from an Ivy dependency file
-(aka <tt>ivy.xml</tt>) into Gradle.</p>
+<ul>
+  <li> Version 1.0.* and later require Gradle 2.0 or later.</li>
+  <li>Version 0.3.* and later require Gradle 1.0-milestone-6 or later.</li>
+  <li> <strong>IMPORTANT:</strong>  Users who are upgrading Gradle or upgrading Ivyxml should read
+the file <tt>upgrade.txt</tt> in the <tt>doc</tt> subdirectory.
+<br> <br></li>
+</ul>
 
 <p>Purposefully does not do anything with any ivysettings.xml file.  Purposefully
 ignores publishing-related ivy.xml elements and attributes.</p>
@@ -303,21 +332,21 @@ dependencies.</p>
      auto-instantiate Gradle Configurations.</li>
 </ul>
 
-<p><strong>With Gradle milestone-6, you will get warnings If you run ivyxml.load()
-  after you apply Gradle's maven plugin.  The warnings look like this:</strong></p>
+<p><strong>With Gradle milestone-6</strong>, you will get warnings If you run ivyxml.load()
+  after you apply Gradle's maven plugin.  The warnings look like this:</p>
 <pre>
     The MavenPluginConvention.getPomDirName() method is deprecated...
 </pre>
 
-<p><strong> and</strong></p>
+<p>and</p>
 <pre>
     The MavenPluginConvention.getPomDir() method is deprecated...
 </pre>
 
-<p><strong> Ignore these messages, because the message text is wrong, and Ivyxml is
-</strong> doing nothing wrong.
-<strong> I have registered issue GRADLE-1967:
-</strong>     <a href="http://issues.gradle.org/browse/GRADLE-1967">http://issues.gradle.org/browse/GRADLE-1967</a></p>
+<p>Ignore these messages, because the message text is wrong, and Ivyxml is
+doing nothing wrong.
+I have registered issue GRADLE-1967:
+<strong>     <a href="http://issues.gradle.org/browse/GRADLE-1967">http://issues.gradle.org/browse/GRADLE-1967</a></strong></p>
 
 
 <h2 id="jcsect_UnsupportedIvyXmlFeatures"><span class="jcreole_hbody"> UNSUPPORTED ivy.xml features</span></h2>
@@ -390,15 +419,17 @@ dependencies.</p>
 
 <h3 id="jcsect_PullPluginFromInternet"><span class="jcreole_hbody"> Pull plugin from Internet.</span></h3>
 
-<p>    Couldn't be easier.  This will pull the plugin from Maven Central:</p>
+<p>    Couldn't be easier.  This will pull the plugin from jCenter:</p>
 <pre class="prettyprint">
         buildscript {
-            mavenCentral()
+            repositories { jcenter() }  // Before plugin v. 1.0.0 use mavenCentral()
             dependencies {
                 classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
+                // For strictly repeatable builds, replace 'latest.integration'
+                // with the latest literal GA version label.
             }
         }
-        apply plugin: 'ivyxml'
+        apply plugin: 'com.admc.ivyxml'
         apply plugin: 'java'  // Load any plugins that define configurations
         ...
         ivyxml.load()
@@ -425,6 +456,11 @@ dependencies.</p>
             classpath fileTree(
                 dir: 'directory/containing/the/plugin/jar/file',
                 include: 'gradle-ivyxml-plugin-*.jar
+            ),
+            // Following not needed for Ivyxml before 1.0.0 / Gradle before 2.0
+            classpath fileTree(
+                dir: 'directory/containing/ivy/jar/file',
+                include: 'apache-ivy-*.jar
             )
         } }
         apply plugin: 'ivyxml'
@@ -445,7 +481,7 @@ dependencies.</p>
     constructor.</p>
 
 <ul>
-  <li><span class="jcreole_lh"> File ivyxml.depFile} </span><span class="jcreole_ld">
+  <li><span class="jcreole_lh"> File ivyxml.depFile </span> <span class="jcreole_ld">
         The Ivy dependency file to load when ivyxml.load() is executed.
         Corresponds to native Ivy property <tt>ivy.dep.file</tt>.
         After Ivyxml v. 0.2.1, if Java system property <tt>ivy.dep.file</tt> is set,
@@ -454,7 +490,7 @@ dependencies.</p>
 </ul>
 
 <ul>
-  <li><span class="jcreole_lh"> boolean ivyxml.instantiateConfigurations </span><span class="jcreole_ld">
+  <li><span class="jcreole_lh"> boolean ivyxml.instantiateConfigurations </span> <span class="jcreole_ld">
         If this setting is true, then Gradle Configurations will be
         instantiated as necessary to match all Ivy confs.
         If false, then Ivy confs are ignored which both (a) have no
@@ -472,7 +508,7 @@ dependencies.</p>
 </ul>
 
 <ul>
-  <li><span class="jcreole_lh"> Map&lt;String, String&gt; ivyxm.ivyVariables </span><span class="jcreole_ld">
+  <li><span class="jcreole_lh"> Map&lt;String, String&gt; ivyxm.ivyVariables </span> <span class="jcreole_ld">
         You can use these variables in the ivy.xml file with references like
         ${this} in ivy.xml attribute values.
         [Before version 0.3.0 of this plugin, this property was
@@ -482,7 +518,7 @@ dependencies.</p>
 </ul>
 
 <ul>
-  <li><span class="jcreole_lh"> String property projIvyVariablePrefix </span><span class="jcreole_ld">
+  <li><span class="jcreole_lh"> String property projIvyVariablePrefix </span> <span class="jcreole_ld">
         [Before version 0.3.0 of this plugin, boolean
         property <tt>variablizeProjStrings</tt> controlled this behavior, with
         non-modifiable prefix value of <tt>gproj|</tt>].
@@ -548,7 +584,7 @@ ${gproj|projectPropertyName}
 </div>
 
 <hr>
-<div class="jcreole_footer">Generated by JCreole v. 1.1.3-SNAPSHOT @ 2012-01-10T18:16:35-0500.
+<div class="jcreole_footer">Generated by JCreole v. 1.3.3 @ 2014-10-19T13:21:33-0400.
 &nbsp; &nbsp; &nbsp; &nbsp;
 Apache 2 license &copy; 2011 by Axis Data Management Corp.</div>
 </body>
