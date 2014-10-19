@@ -150,10 +150,12 @@ I have registered issue GRADLE-1967:
 
 === Use plugin jar file locally.
 
-    Just use your browser to go to the IvyXml directory at Maven
-    Central.  http://repo1.maven.org/maven2/com/admc/gradle-ivyxml-plugin
+    Just use your browser to go to the Ivyxml directory at jCenter.
+    http://jcenter.bintray.com/com/admc/gradle-ivyxml-plugin/.
     Click into the version that you want.
-    Right-click and download the only *.jar file in that directory.
+    Right-click and download the only file in that directory that ends in
+    "-<VERSION_LABEL>.jar"
+    (i.e. the only jar file which is neither for JavaDoc nor source code).
 
     You can save the plugin jar with your project, thereby automatically
     sharing it with other project developers (assuming you use some SCM system).
@@ -172,7 +174,7 @@ I have registered issue GRADLE-1967:
                 include: 'apache-ivy-*.jar
             )
         } }
-        apply plugin: 'ivyxml'
+        apply plugin: 'com.admc.ivyxml'
         ...             // Define your custom configurations
         ivyxml.load()
         // Note that the load() does not resolve or download anything.
@@ -243,19 +245,19 @@ ${gproj|projectPropertyName}
     void com.admc.gradle.GradleUtil.verifyResolve(Configuration)
     Throws if all dependencies of the specified Configuration have not been
     satisfied by at least one artifact.
-    This method is entirely independent of Ivy XML functionality and is
+    This method is tenuously related to of Ivy XML functionality and is
     bundled here only because it was convenient for me to do so.
     Use it like so:
 <<prettyPrint>>
 {{{
     buildscript {
-        repositories { mavenCentral() }
+        repositories { jcenter() }
         dependencies {
             classpath 'com.admc:gradle-ivyxml-plugin:latest.integration'
         }
     }
 
-    apply plugin: 'ivyxml'
+    apply plugin: 'com.admc.ivyxml'
 
     import com.admc.gradle.GradleUtil
 
